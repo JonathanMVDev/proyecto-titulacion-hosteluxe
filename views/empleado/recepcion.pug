@@ -1,0 +1,114 @@
+extends ../layout/index
+    
+block contenido
+    include ../layout/header
+
+    div(class="w-full flex-1 mb-12")
+
+        //- Titulo de la pagina
+        h1(class="mx-auto text-center pt-10 my-12 text-4xl font-bold font-display text-sky-950")= pagina
+        
+        if cuentaId == 5
+            include ../layout/supervisar
+        div(class="container mx-auto flex pb-12 items-start")
+            
+            //- Tabla de Recepcion
+            div(class="mx-auto w-full flex flex-col bg-white p-8 border-2 justify-center space-y-2")
+
+                div(class="grid grid-cols-3 items-center mb-4")
+
+                    //- Fecha de Hoy
+                    div(class="flex items-center space-x-2")
+                        h1(class="text-base font-bold text-sky-950") Fecha de Hoy: 
+                        p(class="text-base")= fecha
+
+                    //- Titulo de las Recepciones
+                    h1(class="text-center text-3xl font-bold font-display text-sky-950") Clientes de Hoy
+
+                    //- Filtrar Reserva
+                    form(action="/recepcion/buscador" method="POST" class="flex justify-end items-center space-x-2 h-full")
+                        input(type="hidden" name="_csrf" value=csrfToken)
+                        label(for="termino" class="") Buscar por:
+                        input(id="termino" name="termino" type="text" class="p-2 border border-gray-300 rounded-md placeholder-gray-300" placeholder="Nombre" value= termino ? termino : '')
+                        input(type="submit" value="Buscar" class="px-5 block h-full text-center bg-sky-900 hover:bg-sky-600 duration-200 text-white hover:cursor-pointer uppercase font-bold")
+
+                if reservas 
+                    each reserva in reservas
+                        div(class="w-full border-2 rounded-md py-6 px-3 grid grid-cols-6")
+                            div(class="space-y-4 my-auto border-r-2 pl-2")
+                                div(class="")
+                                    h1(class="text-base font-bold") Nombre:
+                                    p(class="text-sm")= reserva.usuario.name
+                                        | 
+                                        span= reserva.usuario.paterno
+                                        | 
+                                        span= reserva.usuario.materno
+                                div(class="")
+                                    h1(class="text-base font-bold") Télefono:
+                                    p(class="text-sm")= reserva.usuario.telefono
+                            div(class="space-y-4 my-auto border-r-2 pl-2")
+                                div(class="")
+                                    h1(class="text-base font-bold") Correo electrónico:
+                                    p(class="text-sm")= reserva.usuario.email
+                                div(class="")
+                                    h1(class="text-base font-bold") N° de Días:
+                                    p(class="text-sm")= reserva.cantidadDias
+                            div(class="space-y-4 my-auto border-r-2 pl-2")
+                                div(class="")
+                                    h1(class="text-base font-bold") Fecha reserva:
+                                    p(class="text-sm")= reserva.fechaInicio
+                                div(class="")
+                                    h1(class="text-base font-bold") Fecha Salida:
+                                    p(class="text-sm")= reserva.fechaFin
+                            div(class="space-y-4 my-auto border-r-2 pl-2")
+                                div(class="")
+                                    h1(class="text-base font-bold") N° y Tipo Hab.:
+                                    p(class="text-sm")= reserva.habitacion.name
+                                        | - 
+                                        span= reserva.habitacion.tipo.name
+                                div(class="")
+                                    h1(class="text-base font-bold") Monto a Pagar:
+                                    p(class="text-sm") $
+                                        span= reserva.montoTotal
+                            div(class="space-y-4 my-auto pl-2")
+                                div(class="")
+                                    h1(class="text-base font-bold") Experiencia Única:
+                                    p(class="text-sm truncate pr-7")= reserva.Evento.TipoEvento.name
+                                        |  (
+                                        span(class="text-sm")= reserva.Evento.TipoEvento.experiencia.name
+                                        | )
+                                div(class="")
+                                    h1(class="text-base font-bold") ¿Preparada?:
+                                    if (reserva.Evento.preparado == false)
+                                        p(class="text-sm") No
+                                    if (reserva.Evento.preparado == true)
+                                        p(class="text-sm") Sí
+                                        
+                            
+                            div(class="my-auto grid grid-rows-2")
+                                h1(class=`${reserva.recepcionado ? 'hidden' : ''} text-lg font-bold text-center`) ¿Realizar Check-In?
+                                h1(class=`${reserva.recepcionado ? '' : 'hidden' } text-lg font-bold text-center`) ¿Realizar Check-Out?
+                                form(action=`${reserva.recepcionado ? `/recepcion/recepcionar/${reserva.id}` : `/recepcion/recepcionar/${reserva.id}`}` method="POST")
+                                    input(type="hidden" name="_csrf" value=csrfToken)
+                                    input(type="submit" value="Recepcionar" class=`${reserva.recepcionado ? 'hidden' : ''} mx-auto block text-white py-2 px-3 bg-green-600 font-bold text-center hover:bg-green-700 cursor-pointer duration-200`)
+                                    input(type="submit" value="Dar Salida" class=`${reserva.recepcionado ? '' : 'hidden'} mx-auto block text-white py-2 px-3 bg-red-600 font-bold text-center hover:bg-red-700 cursor-pointer duration-200`)
+
+                //- Paginador
+                div(class="border py-3 flex items-center justify-between border-t border-gray-200 px-6")
+                    div(class="flex-1 flex items-center justify-between")
+                        p(class="text-sm text-gray-700 gap-2") Mostrando 
+                            span(class="font-medium") #{offset + 1} a 
+                            span(class="font-medium") #{total < limit + offset ? total : limit + offset} de 
+                            span(class="font-medium") #{total} resultados
+                    div(class="")
+                        nav(class="relative z-0 inline-flex justify-end rounded-md shadow-md")
+                            - var n = 1
+                                while n <= paginas
+                                        a(href=`${buscador === true ? `/recepcion/buscador?pagina=${n}?&termino=${termino}` : `/recepcion?pagina=${n}`}` class=`${paginaActual == n ? 'pointer-events-none cursor-auto bg-sky-800 border-sky-900 text-white' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'} relative inline-flex items-center px-4 py-2 border text-sm font-medium`) #{n++} 
+
+   
+    include ../layout/footer
+
+block scripts 
+    if cuentaId == 5
+        script(src="js/supervisar.js")

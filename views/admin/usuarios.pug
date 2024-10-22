@@ -1,0 +1,107 @@
+extends ../layout/index
+    
+block contenido
+    include ../layout/header
+
+    div(class="w-full flex-1 mb-12")
+
+        include ../layout/admin
+
+        div(class="container mx-auto flex pb-12 items-start")
+            
+            //- Tabla de Reservas
+            div(class="mx-auto w-full flex flex-col bg-white p-8 border-2 justify-center")
+                //- Titulo de los usuarios
+                div(class="w-full mb-6")
+                    div(class="container grid grid-cols-3")
+                        a(href=`${ clientesTabla ? `/administrar/clientes/crear-cliente` : `/administrar/empleados/crear-empleado` }` class="w-40 flex items-center justify-center text-center px-5 bg-sky-900 hover:bg-sky-600 duration-200 text-white py-3 hover:cursor-pointer uppercase font-bold text-[13px]")
+                            if clientesTabla
+                                span Crear Cliente
+                            else 
+                                span Crear Empleado
+                        h1(class="text-center text-3xl font-bold font-display text-sky-950") 
+                            if clientesTabla
+                                span Clientes
+                            else 
+                                span Empleados
+                        form(action=`${ clientesTabla ? `/administrar/clientes/buscador` : `/administrar/empleados/buscador` }` method="POST" class="gap-x-3 flex justify-end")
+                            input(type="hidden" name="_csrf" value=csrfToken)
+                            div(class="flex items-center gap-x-3")
+                                label(for="termino" class="") Buscar por nombre: 
+                                input(id="termino" name="termino" type="text" class="p-2 border border-gray-300 rounded-md placeholder-gray-300" placeholder="Ingrese Nombre" value= termino ? termino : '') 
+                            input(type="submit" value="Buscar" class="px-5 text-center bg-sky-900 hover:bg-sky-600 duration-200 text-white hover:cursor-pointer uppercase font-bold")
+
+                if usuarios.length
+                    div(class="mx-auto")
+                        table(class="table-fixed w-full")
+                            thead(class="bg-sky-950 text-white py-2")
+                                tr(class="")
+                                    th(class="py-2 border-r-2 border-white") Nombre y Apellido
+                                    th(class="py-2 border-r-2 border-white") Género
+                                    th(class="py-2 border-r-2 border-white") Correo Eléctronico
+                                    if empleadosTabla
+                                        th(class="py-2 border-r-2 border-white") Rol
+                                    th(class="py-2 border-r-2 border-white flex justify-center gap-1 items-center") Fecha Creacion
+                                        span
+                                            svg(class="size-5" xmlns='http://www.w3.org/2000/svg' fill='none' viewbox='0 0 24 24' stroke-width='1.5' stroke='currentColor')
+                                                path(stroke-linecap='round' stroke-linejoin='round' d='M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3')
+                                    th(class="py-2 border-r-2 border-white") Acción
+                                    if clientesTabla
+                                        th(class="py-2 border-r-2 border-white") ¿Confirmado?
+                            tbody
+                                each usuario in usuarios
+                                    tr
+                                        td(class="py-2 border-sky-950 border-b px-2")
+                                            span= usuario.name
+                                            span 
+                                            span= usuario.paterno
+                                        td(class="py-2 border-sky-950 border-b px-2 first-letter:uppercase")= usuario.genero
+                                        td(class="text-sm py-2 border-sky-950 border-b px-2 truncate")= usuario.email
+                                        if empleadosTabla
+                                            td(class="py-2 border-sky-950 border-b px-2")= usuario.cuenta.name
+                                        td(class="py-2 border-sky-950 border-b px-2")= usuario.fechaCreacion
+                                        td(class="py-2 border-sky-950 border-b")
+                                            if clientesTabla
+                                                div(class="flex justify-center gap-x-8")
+                                                    a(href=`/administrar/clientes/modificar-cliente/${usuario.id}` class="cursor-pointer text-sky-950") Modificar 
+                                                    a(href=`/administrar/clientes/reservas-cliente/${usuario.id}` class="cursor-pointer text-sky-950") Ver Reservas 
+                                            else
+                                                div(class="flex justify-center gap-x-12")
+                                                    a(href=`/administrar/empleados/modificar-empleado/${usuario.id}` class="cursor-pointer text-sky-950") Modificar
+                                                    form(action=`/administrar/empleados/eliminar-empleado/${usuario.id}` method="POST")
+                                                        input(type="hidden" name="_csrf" value=csrfToken)
+                                                        input(type="submit" class="cursor-pointer text-red-950" value="Eliminar")
+                                        if clientesTabla
+                                            if usuario.confirmado
+                                                td(class="py-2 border-sky-950 border-b px-2 bg-green-200 text-green-950 text-center") Sí 
+                                            else
+                                                td(class="py-2 border-sky-950 border-b px-2 bg-red-200 text-red-950 text-center") No
+
+                        if clientesTabla
+                            p(class="text-sm text-center py-4") Los resultados son mostrados descendiente a la fecha de creación
+                        else
+                            p(class="text-sm text-center py-4") Los resultados son mostrados descendiente al rol y la fecha de creación
+                        
+                        //- Paginador
+                        div(class="border py-3 flex items-center justify-between border-t border-gray-200 px-6")
+                            div(class="flex-1 flex items-center justify-between")
+                                p(class="text-sm text-gray-700 gap-2") Mostrando 
+                                    span(class="font-medium") #{offset + 1} a 
+                                    span(class="font-medium") #{total < limit + offset ? total : limit + offset} de 
+                                    span(class="font-medium") #{total} resultados
+                            div(class="")
+                                nav(class="relative z-0 inline-flex justify-end rounded-md shadow-md")
+                                    - var n = 1
+                                        while n <= paginas
+                                            if clientesTabla
+                                                a(href=`${buscador === true ? `/administrar/clientes/buscador?pagina=${n}?&termino=${termino}` : `/administrar/clientes?pagina=${n}`}` class=`${paginaActual == n ? 'pointer-events-none cursor-auto bg-sky-800 border-sky-900 text-white' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'} relative inline-flex items-center px-4 py-2 border text-sm font-medium`) #{n++} 
+                                            else
+                                                a(href=`${buscador === true ? `/administrar/empleados/buscador?pagina=${n}?&termino=${termino}` : `/administrar/empleados?pagina=${n}`}` class=`${paginaActual == n ? 'pointer-events-none cursor-auto bg-sky-800 border-sky-900 text-white' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'} relative inline-flex items-center px-4 py-2 border text-sm font-medium`) #{n++} 
+
+                else
+                    if clientesTabla
+                        p(class="text-sm text-center") No hay clientes registrados para mostrar
+                    else
+                        p(class="text-sm text-center") No hay empleados registrados para mostrar
+
+    include ../layout/footer

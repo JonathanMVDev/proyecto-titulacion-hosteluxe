@@ -1,0 +1,107 @@
+extends ../layout/index
+    
+block contenido
+    include ../layout/header
+
+    div(class="w-full flex-1 mb-12")
+
+            include ../layout/admin
+
+            div(class="container mx-auto flex pb-12 items-start")
+                
+                //- Formulario Crear Cliente
+                div(class="mx-auto flex flex-col bg-white p-8 border-2 justify-center")
+                    //- Titulo del Form
+                    if clienteTabla
+                        h1(class="text-center mb-6 text-3xl font-bold font-display text-sky-950") Crear Cliente
+                    else 
+                        h1(class="text-center mb-6 text-3xl font-bold font-display text-sky-950") Crear Empleado
+
+                    //- Errores en caso de mal rellenado o no hay posibles habitaciones
+                    if errores
+                        each error in errores
+                            div(class="max-w-80 gap-[0.5] mx-auto  w-full")
+                                p(class="text-center py-2 my-1 bg-red-700 text-white w-full text-xs font-bold ")=error.msg
+
+                    div
+                        form(method="POST" action=`${ clienteTabla ? `/administrar/clientes/crear-cliente` : `/administrar/empleados/crear-empleado`}` class="space-y-5" novalidate)
+                            input(type="hidden" value=csrfToken name="_csrf")
+
+                            //- Input Nombre
+                            div
+                                label(for="name" class="block mb-2 uppercase text-sm") Nombre
+                                input#name(type="text" name="name" value=usuario ? usuario.name : '' placeholder="Tu Nombre" class="p-2 w-[400px] border border-gray-300 rounded-md placeholder-gray-300") 
+                            
+                            div(class="flex justify-between w-[400px]")
+                                //- Input Apellido Paterno
+                                div(class="w-[49%]")
+                                    label(for="paterno" class="block mb-2 uppercase text-sm") Apellido Paterno
+                                    input#paterno(type="text" name="paterno" value=usuario ? usuario.paterno : '' placeholder="Tu Apellido Paterno" class="w-[100%] p-2 border border-gray-300 rounded-md placeholder-gray-300") 
+                                //- Input Apellido Materno
+                                div(class="w-[49%]")
+                                    label(for="materno" class="block mb-2 uppercase text-sm") Apellido Materno
+                                    input#materno(type="text" name="materno" value=usuario ? usuario.materno : '' placeholder="Tu Apellido Materno" class="w-[100%] p-2 border border-gray-300 rounded-md placeholder-gray-300") 
+                            
+                            //- Input Genero
+                            div
+                                p(class="block mb-2 uppercase text-sm") Género
+                                    div(class="flex items-center gap-4")
+                                        div(class="flex items-center gap-1")
+                                            input#masculino(type="radio" name="genero" value="masculino" checked=(usuario && usuario.genero === 'masculino'))
+                                            label(for="masculino" class="block text-sm") Masculino
+                                        div(class="flex items-center gap-1")
+                                            input#femenino(type="radio" name="genero" value="femenino" checked=(usuario && usuario.genero === 'femenino'))
+                                            label(for="femenino" class="block text-sm") Femenino
+                            
+                            //- Input Correo
+                            div
+                                if clienteTabla
+                                    label(for="email" class="block mb-2 uppercase text-sm") Correo Electrónico
+                                    input#email(type="email" name="email" placeholder="Correo@gmail.com" class="p-2 w-[400px] border border-gray-300 rounded-md placeholder-gray-300" ) 
+                                else
+                                    label(for="emailEmpleado" class="block mb-2 uppercase text-sm") Correo Electrónico
+                                    input#emailEmpleado(type="email" value= usuario ? usuario.emailEmpleado : '' name="emailEmpleado" placeholder="Correo@gmail.com" class="p-2 w-[400px] border border-gray-300 rounded-md placeholder-gray-300" ) 
+
+                            //- Input Telefono
+                            div
+                                label(for="telefono" class="block mb-2 uppercase text-sm") Teléfono
+                                div(class="flex justify-between w-[400px]")
+                                    p(class="p-2 w-[15%] border border-gray-300 rounded-md placeholder-gray-300") +569 
+                                    input#telefono(type="text" name="telefono" placeholder="Tu Teléfono" class="p-2 w-[83%] border border-gray-300 rounded-md placeholder-gray-300") 
+                            
+                            if clienteTabla
+                                //- Input Contraseña
+                                div
+                                    label(for="password" class="block mb-2 uppercase text-sm") Contraseña
+                                    input#password(type="password" name="password" placeholder="Tu Contraseña" class="p-2 w-full border border-gray-300 rounded-md placeholder-gray-300") 
+                                
+                                //- Input Repite Contraseña
+                                div
+                                    label(for="repetir_password" class="block mb-2 uppercase text-sm") Repite Tu Contraseña
+                                    input#repetir_password(type="password" name="repetir_password" placeholder="Repite Contraseña" class="p-2 w-full border border-gray-300 rounded-md placeholder-gray-300") 
+                            
+                            else
+                                //- Input Contraseña Empleado
+                                div
+                                    label(for="password" class="block mb-2 uppercase text-sm") Contraseña
+                                    input#password(type="password" name="password" placeholder="Tu Contraseña" class="p-2 w-full border border-gray-300 rounded-md placeholder-gray-300") 
+                                
+                            if empleadoTabla
+                                div
+                                    label(for="cuentaRol" class="block mb-2 uppercase text-sm") Tipo de Empleado
+                                    select(name="cuentaRol" class="text-center py-2 w-full border border-gray-300 rounded-md placeholder-gray-300")
+                                        option(value="2") Recepcionista
+                                        option(value="3") Servicio a la Habitación
+                                        option(value="4") Cocinero
+                                        
+                            input(type="submit" value="Crear" class="w-full text-center  bg-sky-900 hover:bg-sky-600 duration-200 text-white py-2 hover:cursor-pointer uppercase font-bold")
+                        
+                        p(class="text-sm text-center pt-2") La contraseña se generará con el nombre y los primeros
+                            br 
+                            span dos caracteres del apellido paterno, separados con
+                            br
+                            span un punto
+
+    include ../layout/footer
+block scripts
+    script(src="/js/inputCorreo.js")

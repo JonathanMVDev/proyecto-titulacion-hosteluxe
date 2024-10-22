@@ -1,0 +1,91 @@
+extends ../layout/index
+    
+block contenido
+    include ../layout/header
+
+    div(class="w-full flex-1 mb-12")
+
+        include ../layout/admin
+        
+        div(class="container mx-auto flex pb-12 items-start")
+
+            //- Tabla de Reservas
+            div(class="mx-auto w-full flex flex-col bg-white p-8 border-2 justify-center")
+                div(class="container flex flex-col w-full relative mb-6")
+                    h1(class="w-full text-3xl absolute text-center font-bold font-display text-sky-950") Mensajes
+                    div(class="flex justify-end")
+                        form(action="/administrar/mensajes/buscador" method="POST" class="static z-20 flex justify-end items-center space-x-3")
+                            input(type="hidden" name="_csrf" value=csrfToken)
+                            //- Input correo
+                            label(for="correo") Buscar por correo: 
+                            input(id="correo" name="correo" type="text" class="p-2 border border-gray-300 rounded-md placeholder-gray-300" placeholder="Ingrese Correo" value= correo ? correo : '') 
+
+                            input(type="submit" value="Buscar" class="w-40 flex items-center justify-center text-center px-5 bg-sky-900 hover:bg-sky-600 duration-200 text-white py-3 hover:cursor-pointer uppercase font-bold text-[13px]")
+
+                    if mensajes
+                        div(class="grid col-start-1 col-end-3 mt-8 row-start-2 row-end-3")
+                            div(class="grid grid-cols-1 gap-8 w-full")
+                                table(class="table-fixed w-full")
+                                    thead(class="bg-sky-950 text-white py-2")
+                                        tr(class="")
+                                            th(class="py-2 border-r-2 border-white") Imagen
+                                            th(class="py-2 border-r-2 border-white") Motivo
+                                            th(class="py-2 border-r-2 border-white") Email
+                                            th(class="py-2 border-r-2 border-white") Asunto
+                                            th(class="py-2 border-r-2 border-white") Descripción
+                                            th(class="py-2 border-r-2 border-white flex justify-center gap-1 items-center") Fecha Creacion
+                                                span
+                                                    svg(class="size-5" xmlns='http://www.w3.org/2000/svg' fill='none' viewbox='0 0 24 24' stroke-width='1.5' stroke='currentColor')
+                                                        path(stroke-linecap='round' stroke-linejoin='round' d='M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3')
+                                            th(class="py-2 border-r-2 border-white") Estado
+                                            th(class="py-2 border-r-2 border-white") Acción
+                                    tbody
+                                        each mensaje in mensajes
+                                            tr
+                                                td(class="py-2 border-sky-950 border-b px-2")
+                                                    if mensaje.imagen
+                                                        a(href=`/uploads/mensajes/${mensaje.imagen}`) 
+                                                            img(src=`/uploads/mensajes/${mensaje.imagen}`, class="border-2 rounded h-32 object-cover object-center text-center items-center flex" alt=`Imagen situacion ${mensaje.id}`)
+                                                    else
+                                                        p(class="truncate h-32 bg-gray-50 flex items-center justify-center border-2 rounded") No posee
+                                                if mensaje.motivo === "consulta"
+                                                    td(class="py-2 border-sky-950 border-b px-2 first-letter:uppercase text-center")= mensaje.motivo
+                                                else if mensaje.motivo === "queja"
+                                                    td(class="py-2 border-sky-950 border-b px-2 first-letter:uppercase text-center")= mensaje.motivo
+                                                else
+                                                    td(class="py-2 border-sky-950 border-b px-2 first-letter:uppercase text-center")= mensaje.motivo
+                                                td(class="text-sm py-2 border-sky-950 border-b px-2")= mensaje.email
+                                                td(class="text-sm py-2 border-sky-950 border-b px-2")= mensaje.asunto
+                                                td(class="text-sm py-2 border-sky-950 border-b px-2 text-center bg-gray-100")= mensaje.descripcion
+                                                td(class="py-2 border-sky-950 border-b px-2")= mensaje.fechaCreacion
+
+                                                if mensaje.estado
+                                                    td(class="py-2 border-sky-950 border-b px-2 bg-green-200 text-green-950 text-center") Sin Respuesta
+                                                else
+                                                    td(class="py-2 border-sky-950 border-b px-2 bg-red-200 text-red-950 text-center") Conversación Cerrada
+
+                                                if mensaje.estado
+                                                    td(class="py-2 border-sky-950 border-b")
+                                                        div(class="flex justify-center gap-x-6")
+                                                            a(href=`/administrar/mensajes/respuesta-mensaje/${mensaje.id}` class="cursor-pointer text-sky-950") Responder
+                                                            form(action=`/administrar/mensajes/${mensaje.id}` method="POST")
+                                                                input(type="hidden" name="_csrf" value= csrfToken)
+                                                                input(type="submit" class="cursor-pointer" value="Cerrar")
+                                                else 
+                                                    td(class="py-2 border-sky-950 border-b")
+                                                        a(href=`/administrar/mensajes/${mensaje.id}` class="cursor-pointer text-sky-950 text-center block") Ver Conversación
+
+                //- Paginador
+                div(class="border py-3 flex items-center justify-between border-t border-gray-200 px-6")
+                    div(class="flex-1 flex items-center justify-between")
+                        p(class="text-sm text-gray-700 gap-2") Mostrando 
+                            span(class="font-medium") #{offset + 1} a 
+                            span(class="font-medium") #{total < limit + offset ? total : limit + offset} de 
+                            span(class="font-medium") #{total} resultados
+                    div(class="")
+                        nav(class="relative z-0 inline-flex justify-end rounded-md shadow-md")
+                            - var n = 1
+                                while n <= paginas
+                                    a(href=`${buscador === true ? `/administrar/mensajes/buscador?pagina=${n}&correo=${correo}` : `/administrar/mensajes?pagina=${n}`}` class=`${paginaActual == n ? 'pointer-events-none cursor-auto bg-sky-800 border-sky-900 text-white' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'} relative inline-flex items-center px-4 py-2 border text-sm font-medium`) #{n++}  
+                        
+    include ../layout/footer

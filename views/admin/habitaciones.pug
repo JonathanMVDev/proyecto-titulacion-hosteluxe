@@ -1,0 +1,77 @@
+extends ../layout/index
+    
+block contenido
+    include ../layout/header
+
+    div(class="w-full flex-1 mb-12")
+
+        include ../layout/admin
+        
+        div(class="container mx-auto flex pb-12 items-start")
+
+            //- Tabla de Reservas
+            div(class="mx-auto w-full flex flex-col bg-white p-8 border-2 justify-center")
+                div(class="container w-full relative mb-6 flex justify-end")
+                    form(action="/administrar/habitaciones/buscador" method="POST" class="static flex  z-10 items-center space-x-3")
+                        input(type="hidden" name="_csrf" value=csrfToken)
+                        label(for="termino") Filtrar por:
+                        select#termino(name="termino" class="p-2 border border-gray-300  placeholder-gray-300")
+                            option(value="5" selected= termino == 5 ) Todas
+                            option(value="4" selected= termino == 4 ) Vip
+                            option(value="3" selected= termino == 3 ) Gran Suite
+                            option(value="2" selected= termino == 2 ) Junior Suite
+                            option(value="1" selected= termino == 1 ) Suite
+                        input(type="submit" value="Filtrar" class="w-40 flex items-center justify-center text-center px-5 bg-sky-900 hover:bg-sky-600 duration-200 text-white py-3 hover:cursor-pointer uppercase font-bold text-[13px]")
+                
+                    h1(class="text-3xl z-0 w-full text-center absolute font-bold font-display text-sky-950") Habitaciones
+                table(class="table-fixed w-full mb-6")
+                    thead(class="bg-sky-950 text-white py-2")
+                        tr(class="")
+                            th(class="py-2 border-r-2 border-white") N° de Habitacion y Tipo
+                            th(class="py-2 border-r-2 border-white") ¿Reservada?
+                            th(class="py-2 border-r-2 border-white") Estado
+                            th(class="py-2 border-r-2 border-white") ¿Habilitada?
+                            th(class="py-2 border-r-2 border-white") Acción
+                    tbody 
+                        each habitacion in habitaciones
+                            tr 
+                                td(class="py-2 border-sky-950 border-b px-2")= habitacion.name
+                                    span  - 
+                                    span= habitacion.tipo.name
+                                td(class="py-2 border-sky-950 border-b px-2")
+                                    if reservadas.includes(habitacion.id)
+                                        img(src="/img/svg/2Checked.svg", alt="" class="size-6 mx-auto")
+                                    else
+                                        img(src="/img/svg/2XChecked.svg", alt="" class="size-6 mx-auto")
+                                if habitacion.estado == 1
+                                    td(class="bg-green-200 py-2 border-sky-950 border-b px-2")
+                                        span(class="text-green-950 text-center block") Desocupado
+                                if habitacion.estado == 2
+                                    td(class="bg-orange-200 py-2 border-sky-950 border-b px-2")
+                                        span(class="text-orange-950 text-center block") Ocupado
+                                if habitacion.estado == 3
+                                    td(class="bg-blue-200 py-2 border-sky-950 border-b px-2")
+                                        span(class="text-blue-950 text-center block") Requiere limpieza
+                                td(class="py-2 border-sky-950 border-b px-2 text-center")
+                                    if habitacion.habilitado
+                                        span Sí
+                                    else 
+                                        span No
+                                td(class="py-2 border-sky-950 border-b px-2")
+                                    a(href=`/administrar/habitaciones/modificar-habitacion/${habitacion.id}` class="block text-center cursor-pointer text-sky-950" value="Cambiar Estado") Modificar
+                
+                //- Paginador
+                div(class="border py-3 flex items-center justify-between border-t border-gray-200 px-6")
+                    div(class="flex-1 flex items-center justify-between")
+                        p(class="text-sm text-gray-700 gap-2") Mostrando 
+                            span(class="font-medium") #{offset + 1} a 
+                            span(class="font-medium") #{total < limit + offset ? total : limit + offset} de 
+                            span(class="font-medium") #{total} resultados
+                    div(class="")
+                        nav(class="relative z-0 inline-flex justify-end rounded-md shadow-md")
+                            - var n = 1
+                                while n <= paginas
+                                    a(href=`${buscador === true ? `/administrar/habitaciones/buscador?pagina=${n}&termino=${termino}` : `/administrar/habitaciones?pagina=${n}`}` class=`${paginaActual == n ? 'pointer-events-none cursor-auto bg-sky-800 border-sky-900 text-white' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'} relative inline-flex items-center px-4 py-2 border text-sm font-medium`) #{n++}  
+
+
+    include ../layout/footer

@@ -1,0 +1,22 @@
+extends ../layout/index
+    
+block contenido
+    include ../layout/header
+
+    //- Container para el Form
+    div(class="w-full flex-1")
+        h1(class="text-center pt-10 my-12 text-4xl font-bold font-display text-sky-950")= pagina
+        div(class="container pb-12 gap-6 mx-auto flex flex-col md:flex-row")
+            div(class="bg-white gap-8 p-8 border-2 flex flex-col justify-start")
+                div(class="flex flex-col")
+                    h1(class="text-center text-3xl font-bold font-display text-sky-950") Nosotros
+                    p(class="text-xl text-black text-center py-2") En nuestro hotel, nos dedicamos a proporcionar una experiencia inigualable que combina comodidad, lujo y atención al detalle. Desde el momento en que cruzas nuestras puertas, te sumerges en un ambiente de relajación y sofisticación, pensado para satisfacer todas tus necesidades.
+                div(class="flex flex-col")
+                    h1(class="text-center text-3xl font-bold font-display text-sky-950") Visión
+                    p(class="text-xl text-black text-center py-2") Ser reconocidos como el hotel líder en la región, ofreciendo experiencias inolvidables y superando las expectativas de nuestros huéspedes a través de un servicio excepcional, innovación continua y un compromiso inquebrantable con la calidad.
+                div(class="flex flex-col")
+                    h1(class="text-center text-3xl font-bold font-display text-sky-950") Misión
+                    p(class="text-xl text-black text-center py-2") Brindar a nuestros huéspedes un ambiente acogedor y confortable, donde se sientan valorados y atendidos en cada momento. Nos esforzamos por ofrecer servicios personalizados y experiencias únicas que reflejen la autenticidad de nuestra cultura y el entorno, garantizando la satisfacción total de nuestros clientes.
+            img(src="/img/nosotros.jpg", alt="" class="object-cover")
+ 
+        include ../layout/footer

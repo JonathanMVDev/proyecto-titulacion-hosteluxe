@@ -1,0 +1,16 @@
+extends ../layout/index
+
+block contenido
+    include ../layout/header
+    div(class="w-full flex-1")
+        div(class="flex h-full md:justify-between items-center gap-10 xl:gap-0 xl:my-0 my-24 flex-col xl:flex-row py-10")
+
+            div(class="mx-auto flex flex-col justify-center")
+                //- Titulo
+                div(class="flex justify-center flex-col p-4 border-2 bg-white w-[40rem] h-[13rem]")
+                    h1(class="text-center mb-4 text-4xl font-bold font-display text-sky-950")= pagina
+                    p(class="text-black text-center text-xl")= mensaje
+
+            img(class="object-cover hidden w-full lg:hidden xl:block xl:w-[35rem] 2xl:w-[50rem] mt-10 md:mt-0" src="/img/bg_register.jpg")
+
+    include ../layout/footer

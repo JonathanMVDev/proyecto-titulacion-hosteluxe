@@ -1,0 +1,140 @@
+extends ../layout/index
+    
+block contenido
+    include ../layout/header
+
+    div(class="w-full flex-1 mb-12")
+
+        //- Titulo de la pagina
+        h1(class="mx-auto text-center pt-10 my-12 text-4xl font-bold font-display text-sky-950")= pagina
+        
+        if cuentaId == 5
+            include ../layout/supervisar
+        
+        div(class="container mx-auto flex pb-12 items-start")
+            
+            //- Tabla de Recepcion
+            div(class="mx-auto w-full flex flex-col bg-white p-8 border-2 justify-center")
+
+                div(class="relative flex justify-center w-full h-full items-center mb-8")
+
+                    //- Fecha de Hoy
+                    div(class="absolute flex items-center w-full h-full space-x-2")
+                        h1(class="text-base font-bold text-sky-950") Fecha de Hoy:
+                        p(class="text-base")= fecha
+
+                    //- Titulo de las Recepciones
+                    h1(class="text-center text-3xl static z-10 font-bold font-display text-sky-950") Servicio a la Habitación
+
+                div(class="flex w-max justify-left mx-auto mb-4")
+                    div(class="w-max mr-[1px]" id="pedidosPagina")
+                        button(id="pedidos" class="pointer-events-none text-sm uppercase duration-200 px-4 py-4 text-center w-[200px] text-white font-bold bg-gray-400 cursor-pointer hover:bg-sky-600") Pedidos
+                    div(class="w-max mr-[1px]" id="mantencionPagina")
+                        button(id="mantencion" class="text-sm uppercase duration-200 px-4 py-4 text-center w-[200px] text-white font-bold bg-sky-900 cursor-pointer hover:bg-sky-600") Mantención
+                    div(class="w-max mr-[1px]" id="eventosPagina")
+                        button(id="eventos" class="text-sm uppercase duration-200 px-4 py-4 text-center w-[200px] text-white font-bold bg-sky-900 cursor-pointer hover:bg-sky-600") Eventos
+                    
+                //- Pedidos
+                div(id="pedidosDiv" class="space-y-2")
+                    if  compras
+                        each compra in compras
+                            div(class="w-full border-2 rounded-md py-6 px-3 grid grid-cols-6")
+                                div(class="space-y-2 my-auto border-r-2 pl-2")
+                                    h1(class="text-base font-bold") Cliente:
+                                    p(class="text-sm")= compra.reserva.usuario.name
+                                        | 
+                                        span= compra.reserva.usuario.paterno
+                                div(class="space-y-2 my-auto border-r-2 pl-2")
+                                    h1(class="text-base font-bold") Tipo y N° Habitación:
+                                    p(class="text-sm")= compra.reserva.habitacion.tipo.name
+                                        | - 
+                                        span= compra.reserva.habitacion.name
+                                div(class="space-y-2 my-auto border-r-2 pl-2")
+                                    h1(class="text-base font-bold") Correo electrónico:
+                                    p(class="text-sm")= compra.reserva.usuario.email
+                                div(class="space-y-2 my-auto border-r-2 pl-2")
+                                    h1(class="text-base font-bold") Fecha y Hora de Compra:
+                                    p(class="text-sm")= compra.fechaCompra
+                                div(class="space-y-2 my-auto pl-2")
+                                    h1(class="text-base font-bold") Cantidad de Platillos:
+                                    p(class="text-sm")= compra.cantidadPlatos
+
+                                div(class="my-auto grid grid-rows-2")
+                                    h1(class="text-base font-bold text-center") ¿Pedido Entregado?
+                                    form(action=`/servicio/pedido/${compra.id}` method="POST")
+                                        input(type="hidden" name="_csrf" value=csrfToken)
+                                        input(type="submit" value="Confirmar" class="mx-auto block w-full text-white py-2 px-3 bg-green-600 font-bold text-center hover:bg-green-700 cursor-pointer duration-200")
+                    p(class="text-sm text-center mt-16") No se han encontrado ningun registro de pedidos a realizar
+
+                //- Habitaciones
+                div(id="mantencionDiv" class="hidden space-y-2")
+                    if  habitaciones
+                        //- pre= JSON.stringify(habitaciones, undefined, 2)
+                        each habitacion in habitaciones
+                            div(class="w-full border-2 rounded-md py-6 px-3 grid grid-cols-4")
+                                div(class="space-y-2 my-auto border-r-2 pl-2")
+                                    h1(class="text-base font-bold") Tipo y N° de Habitación:
+                                    p(class="text-sm")= habitacion.habitacion.tipo.name
+                                        | - 
+                                        span= habitacion.habitacion.name
+                                div(class="space-y-2 my-auto border-r-2 pl-2")
+                                    h1(class="text-base font-bold") Último Cliente Registrado:
+                                    p(class="text-sm")= habitacion.usuario.name
+                                        |  
+                                        span= habitacion.usuario.paterno
+                                div(class="space-y-2 my-auto pl-2")
+                                    h1(class="text-base font-bold") Estado Habitación:
+                                    if habitacion.habitacion.estado == 3
+                                        p(class="text-sm") En limpieza 
+                                div(class="my-auto grid grid-rows-2")
+                                    h1(class="text-base font-bold text-center") ¿Habitación Lista?
+                                    form(action=`/servicio/habitacion/${habitacion.habitacion.id}` method="POST")
+                                        input(type="hidden" name="_csrf" value=csrfToken)
+                                        input(type="submit" value="Confirmar" class="mx-auto block w-full text-white py-2 px-3 bg-green-600 font-bold text-center hover:bg-green-700 cursor-pointer duration-200")
+                    p(class="text-sm text-center mt-16") No se han encontrado ningun registro de habitaciones para limpieza
+
+                //- Eventos
+                div(id="eventosDiv" class="hidden space-y-2")
+                    if  eventos
+                        each evento in eventos
+                            div(class="w-full border-2 rounded-md py-6 px-3 grid grid-cols-6")
+                                div(class="space-y-2 my-auto border-r-2 pl-2")
+                                    h1(class="text-base font-bold") Cliente:
+                                    p(class="text-sm")= evento.usuario.name
+                                        | 
+                                        span= evento.usuario.paterno
+                                div(class="space-y-2 my-auto border-r-2 pl-2")
+                                    h1(class="text-base font-bold") Correo electrónico:
+                                    p(class="text-sm")= evento.usuario.email
+                                div(class="space-y-2 my-auto border-r-2 pl-2")
+                                    h1(class="text-base font-bold") Tipo y N° Habitación:
+                                    div(class="flex space-x-1")
+                                        if evento.habitacion.tipoId == 1
+                                            p(class="text-sm") Junior Suite
+                                        if evento.habitacion.tipoId  == 2
+                                            p(class="text-sm") Suite
+                                        if evento.habitacion.tipoId  == 3
+                                            p(class="text-sm") Gran Suite
+                                        if evento.habitacion.tipoId  == 4
+                                            p(class="text-sm") Vip
+                                        p(class="text-sm") - 
+                                            span(class="text-sm")= evento.habitacion.name
+                                div(class="space-y-2 my-auto border-r-2 pl-2")
+                                    h1(class="text-base font-bold") Tipo de evento:
+                                    p(class="text-sm")= evento.Evento.TipoEvento.experiencia.name
+                                div(class="space-y-2 my-auto pl-2")
+                                    h1(class="text-base font-bold") Experiencia de regalo:
+                                    p(class="text-sm")= evento.Evento.TipoEvento.name
+                                div(class="my-auto flex flex-col space-y-2")
+                                    h1(class="text-base font-bold text-center") ¿Evento Preparado?
+                                    form(action=`/servicio/evento/${evento.Evento.id}` method="POST")
+                                        input(type="hidden" name="_csrf" value=csrfToken)
+                                        input(type="submit" value="Confirmar" class="mx-auto block w-full text-white py-2 px-3 bg-green-600 font-bold text-center hover:bg-green-700 cursor-pointer duration-200")
+                    p(class="text-sm text-center mt-16") No se han encontrado ningun registro de eventos para preparar
+
+    include ../layout/footer
+
+block scripts 
+    if cuentaId == 5
+        script(src="js/supervisar.js")
+    script(src="js/servicioEmpleado.js")

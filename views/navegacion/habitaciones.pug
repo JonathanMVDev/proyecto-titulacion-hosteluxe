@@ -1,0 +1,99 @@
+extends ../layout/index
+    
+block contenido
+    include ../layout/header
+
+    //- Container para el Form
+    div(class="w-full flex-1")
+        h1(class="text-center pt-10 my-12 text-4xl font-bold font-display text-sky-950")= pagina
+        
+        //- Habitación Vip
+        div(class="container mx-auto grid grid-cols-8 bg-no-repeat bg-left bg-[url('/img/habitaciones/habitacion.jpg')] mb-12")
+            div(class="col-start-1 col-end-3")
+                div(class="flex flex-col bg-white m-8 p-4 text-sky-950 border-[2px] border-sky-950 hover:scale-[1.05] duration-200")
+                    h1(class="text-center text-3xl mb-2 font-bold font-display text-sky-950") Vip
+                    p(class="font-bold mb-2") Para nuestros clientes mas exclusivos
+                    div
+                        h1(class="font-bold") Servicio de Mayordomo
+                        p(class="text-sm text-black mb-2") Un mayordomo disponible las 24 horas para atender las necesidades del huésped, como empacar/desempacar, preparar baños, etc.
+                    div
+                        h1(class="font-bold") Amenidades de Bienvenida
+                        p(class="text-sm text-black mb-2") Bebida de cortesía (champaña, vino, jugo fresco) y bandeja de frutas, chocolates finos, o bocadillos gourmet a la llegada.
+                    div
+                        h1(class="font-bold") Mini Bar Premium
+                        p(class="text-sm text-black mb-2") Mini bar equipado con bebidas y snacks de lujo, incluyendo licores de alta calidad, refrescos exclusivos y aperitivos gourmet.
+                    div
+                        h1(class="font-bold") Baño de Lujo
+                        p(class="text-sm text-black mb-2") Artículos de baño de marcas de prestigio, jacuzzi o bañera de hidromasaje, ducha tipo lluvia, y secador de cabello profesional.
+                    div
+                        h1(class="font-bold") Acceso a Lounge Exclusivo
+                        p(class="text-sm text-black mb-2") Acceso a un lounge VIP con servicios de comidas ligeras, bebidas y espacios para trabajar o relajarse.
+                    div 
+                        h1(class="font-bold") Todos los beneficios inferiores
+                    a(href="/reserva" class="p-2 border-2 mt-2 text-white bg-sky-950 border-sky-900 text-center font-extrabold ") Reserva Ahora! 
+
+            //- Habitación Gran Suite
+        div(class="container mx-auto grid grid-cols-8 bg-no-repeat bg-right bg-[url('/img/habitaciones/gran-suite.jpg')] mb-12")
+            div(class="row-start-2 row-end-3 col-start-3 col-end-5")
+                div(class="flex flex-col bg-white m-8 p-4 text-sky-950 border-[2px] border-sky-950 hover:scale-[1.05] duration-200")
+                    h1(class="text-center text-3xl mb-2 font-bold font-display text-sky-950") Gran Suite
+                    p(class="font-bold mb-2") Para grandes grupos
+                    div
+                        h1(class="font-bold") Espacio Amplio y Diseñado con Elegancia
+                        p(class="text-sm text-black mb-2") Habitaciones y áreas de estar separadas, comedor privado, oficina o espacio de trabajo, y a veces hasta una cocina equipada. Decoración de lujo con mobiliario de alta calidad.
+                    div
+                        h1(class="font-bold") Vista Panorámica
+                        p(class="text-sm text-black mb-2") Ventanas amplias o balcones privados con vistas espectaculares de la ciudad, el océano o el entorno natural.
+                    div
+                        h1(class="font-bold") Recepción y Check-in Personalizado
+                        p(class="text-sm text-black mb-2") Check-in dentro de la suite con atención directa del gerente de la recepción o un anfitrión designado.
+                    div
+                        h1(class="font-bold") Bodega de Vinos Privada
+                        p(class="text-sm text-black mb-2") Una selección de vinos finos y licores premium en la suite, con opción de cata privada organizada por un sommelier.
+                    div 
+                        h1(class="font-bold") Todos los beneficios inferiores
+                    a(href="/reserva" class="p-2 border-2 mt-2 text-white bg-sky-950 border-sky-900 text-center font-extrabold ") Reserva Ahora! 
+                
+        //- Habitación Junior Suite
+        div(class="container mx-auto grid grid-cols-8 bg-no-repeat bg-left bg-[url('/img/habitaciones/suite.webp')] mb-12")
+            div(class="row-start-3 row-end-4 col-start-5 col-end-7")
+                div(class="flex flex-col bg-white m-8 p-4 text-sky-950 border-[2px] border-sky-950 hover:scale-[1.05] duration-200")
+                    h1(class="text-center text-3xl mb-2 font-bold font-display text-sky-950") Junior Suite
+                    p(class="font-bold mb-2") Para ti y tu compañero
+                    div
+                        h1(class="font-bold") Espacio Ampliado
+                        p(class="text-sm text-black mb-2") Junior Suite cuenta con dos habitaciones más amplias que incluye una zona de estar separada o integrada, ideal para relajarse o recibir visitas.
+                    div
+                        h1(class="font-bold") Decoración Elegante
+                        p(class="text-sm text-black mb-2") Mobiliario de alta calidad y diseño elegante, con toques de lujo que pueden incluir obras de arte, textiles finos y acabados de lujo.
+                    div
+                        h1(class="font-bold") Cama King Size o Queen Size
+                        p(class="text-sm text-black mb-2") Cama de gran tamaño con colchones de alta calidad, sábanas de algodón egipcio y una selección de almohadas para garantizar un descanso placentero.
+                    div
+                        h1(class="font-bold") Transporte de Cortesía
+                        p(class="text-sm text-black mb-2") Servicio de transporte desde/hacia el aeropuerto o estaciones cercanas, sujeto a disponibilidad y previa solicitud.
+                    div 
+                        h1(class="font-bold") Todos los beneficios inferiores
+                    a(href="/reserva" class="p-2 border-2 mt-2 text-white bg-sky-950 border-sky-900 text-center font-extrabold ") Reserva Ahora! 
+
+        //- Habitación Suite
+        div(class="container mx-auto grid grid-cols-8 bg-no-repeat bg-right bg-[url('/img/habitaciones/junior-suite.jpg')] mb-12")
+            div(class="row-start-4 row-end-5 col-start-7 col-end-9")
+                div(class="flex flex-col bg-white m-8 p-4 text-sky-950 border-[2px] border-sky-950 hover:scale-[1.05] duration-200")
+                    h1(class="text-center text-3xl mb-2 font-bold font-display text-sky-950") Suite
+                    p(class="font-bold mb-2") Para todos nuestros clientes
+                    div
+                        h1(class="font-bold") Tecnología Avanzada
+                        p(class="text-sm text-black mb-2") Televisión de pantalla plana con acceso a canales premium, sistema de sonido envolvente, Wi-Fi de alta velocidad y dispositivos de carga para electrónicos.
+                    div
+                        h1(class="font-bold") Servicio de Habitaciones 24/7
+                        p(class="text-sm text-black mb-2") Servicio de habitaciones disponible las 24 horas, con un menú que incluye opciones de desayuno, almuerzo, cena y bocadillos.
+                    div
+                        h1(class="font-bold") Servicio de Cobertura Nocturna
+                        p(class="text-sm text-black mb-2") Preparación de la cama para la noche, con detalles como ajustes en la iluminación, provisión de agua embotellada y un pequeño snack.
+                    div
+                        h1(class="font-bold") Acceso a Instalaciones del Hotel
+                        p(class="text-sm text-black mb-2") Acceso a instalaciones exclusivas del hotel como el gimnasio, piscina, spa, y en algunos casos, un lounge ejecutivo con aperitivos y bebidas durante el día.
+                    a(href="/reserva" class="p-2 border-2 mt-2 text-white bg-sky-950 border-sky-900 text-center font-extrabold ") Reserva Ahora! 
+
+        include ../layout/footer

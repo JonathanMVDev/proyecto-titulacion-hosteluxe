@@ -1,0 +1,44 @@
+extends ../layout/index
+    
+block contenido
+    include ../layout/header
+
+    div(class="w-full flex-1 mb-12")
+
+            //- Titulo de la pagina
+            h1(class="mx-auto text-center pt-10 my-12 text-4xl font-bold font-display text-sky-950")= pagina
+                
+            include ../layout/perfil
+
+            div(class="container mx-auto flex pb-12 items-start")
+                div(class="mx-auto w-full flex flex-col bg-white p-8 border-2 justify-center")
+                    div(class="relative")
+                        a(href="/mis-compras" class="absolute left-0 z-10 w-40 text-center px-5 bg-sky-900 hover:bg-sky-600 duration-200 text-white py-3 hover:cursor-pointer uppercase font-bold text-[13px]") Volver 
+                        //- Titulo de las reservas
+                        h1(class="text-center mb-6 text-3xl font-bold font-display text-sky-950") Detalle de la compra
+                    
+                    div(class="w-60[rem] mx-auto")
+                        table(class="table-fixed w-full")
+                            thead(class="bg-sky-950 text-white py-2")
+                                tr(class="")
+                                    th(class="py-2 border-r-2 border-white") Nombre
+                                    th(class="py-2 border-r-2 border-white") Cantidad
+                                    th(class="py-2 border-r-2 border-white") Precio unitario 
+                                    th(class="py-2 border-r-2 border-white") Sub-Total
+                                    
+                            tbody 
+                                each detalle in detalles 
+                                    tr
+                                        td(class="py-2 border-sky-950 border-b px-2 text-center")= detalle.name
+                                        td(class="py-2 border-sky-950 border-b px-2 text-center")= detalle.cantidad
+                                        td(class="py-2 border-sky-950 border-b px-2 text-center bg-slate-100") $
+                                            span= detalle.precioUnitario
+                                        td(class="py-2 border-sky-950 border-b px-2 text-center") $
+                                            span= detalle.subTotal 
+                        div(class="grid grid-cols-4")
+                            div(class="col-start-3 col-end-4 bg-slate-200 flex items-center justify-center")
+                                p(class="py-2 text-center font-bold mr-1") Total: 
+                                p $ 
+                                p= total
+
+    include ../layout/footer

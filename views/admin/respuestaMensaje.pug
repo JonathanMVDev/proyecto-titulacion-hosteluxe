@@ -1,0 +1,88 @@
+extends ../layout/index
+    
+block contenido
+    include ../layout/header
+
+    div(class="w-full flex-1 mb-12")
+
+        include ../layout/admin
+        
+        div(class="container mx-auto flex pb-12 items-start")
+
+            //- Tabla de Reservas
+            div(class="mx-auto w-full flex flex-col justify-center")
+                div(class="container flex flex-col w-full mb-6")
+                    
+                    div(class="flex flex-col space-y-8 w-full")
+                        
+                        div(class="w-full bg-white border-2 px-4 py-8 rounded relative")
+                            h1(class="mb-8 text-center text-3xl mx-auto font-bold font-display first-letter:uppercase text-sky-950")= mensaje.motivo 
+                                span  N°
+                                span= mensaje.id
+                            //- Imagen del Mensaje
+                            div(class="w-100% absolute right-0 mr-4")
+                                img(src=`/uploads/mensajes/${mensaje.imagen}`, class=`${mensaje.imagen ? '' : 'hidden'} h-[218px] w-[288px] object-cover object-center border-4 border-[rgba(250,250,250,255)] rounded` alt="")
+                            div(class="flex space-x-4")
+                                //- Remitente del Mensaje
+                                div(class="mb-3 flex justify-start items-center")
+                                    p(class="w-16 min-w-16 mr-2") De: 
+                                    input(class="text-gray-400 font-bold p-2 border rounded w-60" value=`${mensaje.email}` disabled)
+                                //- Destino del Mensaje
+                                div(class="mb-3 flex justify-start items-center")
+                                    p(class="w-16 min-w-16 mr-2") Para: 
+                                    input(class="text-gray-400 font-bold p-2 border rounded w-60 truncate" value="asistencia.hoteleria@gmail.com" disabled) 
+                            div(class="flex space-x-4")
+                                //- Asunto del Mensaje
+                                div(class="mb-3 flex justify-start items-center")
+                                    p(class="w-16 min-w-16 mr-2") Asunto: 
+                                    input(class="text-gray-400 p-2 border rounded w-60" value=`${mensaje.asunto}` disabled)
+                                //- Fecha del Mensaje
+                                div(class="mb-3 flex justify-start items-center")
+                                    p(class="w-16 min-w-16 mr-2") Fecha: 
+                                    if mensaje.fechaCreacion
+                                        input(class="text-gray-400 p-2 border rounded w-60" value=`${mensaje.fechaCreacion}` disabled)
+                                    else 
+                                        input(class="text-gray-400 p-2 border rounded w-60" value=`No posee` disabled)
+                            //- Descripción del Mensaje
+                            div(class="flex")
+                                p(class="w-16 min-w-16 mr-2") Cuerpo: 
+                                textarea(class=`${mensaje.imagen ? 'w-9/12' : 'w-full'} text-gray-400 text-sm px-2 py-1 resize-none border rounded` rows="5" disabled)= mensaje.descripcion 
+
+                        form(action="" method="POST")
+                            input(type="hidden" name="_csrf" value=csrfToken)
+                            div(class="w-full relative border-2 bg-white px-4 py-8 rounded")
+
+                                h1(class="mb-4 text-center text-3xl mx-auto font-bold font-display text-sky-950") Enviar Respuesta
+
+                                //- Errores en caso de mal rellenado o no hay posibles habitaciones
+                                if errores
+                                    each error in errores
+                                        div(class="max-w-80 gap-[0.5] mx-auto  w-full")
+                                            p(class="text-center py-2 bg-red-700 text-white w-full text-xs font-bold ")=error.msg
+
+                                div(class="flex space-x-4 pt-4")
+                                    //- Remitente del Mensaje
+                                    div(class="mb-3 flex justify-start items-center")
+                                        label(for="remitente" class="w-16 min-w-16 mr-2") De: 
+                                        input#remitente(name="remitente" class="text-gray-400 font-bold p-2 border rounded w-60" value="asistencia.hoteleria@gmail.com"  disabled)
+                                    //- Destino del Mensaje
+                                    div(class="mb-3 flex justify-start items-center")
+                                        label(for="destino" class="w-16 min-w-16 mr-2") Para: 
+                                        input#destino(name="destino" class="text-gray-400 font-bold p-2 border rounded w-60 truncate" value=`${mensaje.email}` disabled) 
+                                div(class="flex space-x-4")
+                                    //- Asunto del Mensaje
+                                    div(class="mb-3 flex justify-start items-center")
+                                        label(for="asunto" class="w-16 min-w-16 mr-2") Asunto: 
+                                        input#asunto(name="asunto" class="text-gray-400 p-2 border rounded w-60" value=`Re: ${mensaje.asunto}` disabled)
+                                    //- Fecha del Mensaje
+                                    div(class="mb-3 flex justify-start items-center")
+                                        label(for="fecha" class="w-16 min-w-16 mr-2") Fecha: 
+                                        input#fecha(name="fecha" class="text-gray-400 p-2 border rounded w-60" value=`${fechaHoy}` disabled)
+                                //- Descripción del Mensaje
+                                div(class="flex mb-3")
+                                    label(for="descripcion" class="w-16 min-w-16 mr-2") Cuerpo: 
+                                    textarea#descripcion(name="descripcion" class="text-sm px-2 py-1 block w-full resize-none border rounded" rows="5")
+                                                                                                
+                                input(type="submit" value="Enviar Respuesta" class="block px-20 mx-auto text-center bg-sky-950 hover:bg-sky-800 duration-200 py-2 font-bold text-white cursor-pointer") 
+            
+    include ../layout/footer

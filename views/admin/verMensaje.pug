@@ -1,0 +1,117 @@
+extends ../layout/index
+    
+block contenido
+    include ../layout/header
+
+    div(class="w-full flex-1 mb-12")
+
+        include ../layout/admin
+        
+        div(class="container mx-auto flex pb-12 items-start")
+
+            //- Tabla de Reservas
+            div(class="mx-auto w-full flex flex-col justify-center")
+                div(class="container flex flex-col w-full mb-6")
+                    
+                    div(class="flex flex-col space-y-8 w-full")
+                        
+                        if respuesta
+                            div(class="w-full bg-white border-2 px-4 py-8 rounded relative")
+                                h1(class="mb-8 text-center text-3xl mx-auto font-bold font-display first-letter:uppercase text-sky-950")= respuesta.mensaje.motivo 
+                                    span  N°
+                                    span= respuesta.mensaje.id
+                                //- Imagen del Mensaje
+                                div(class="w-100% absolute right-0 mr-4")
+                                    img(src=`/uploads/mensajes/${respuesta.mensaje.imagen}`, class=`h-[218px] w-[288px] border-4 border-[rgba(250,250,250,255)] rounded` alt="")
+                                div(class="flex space-x-4")
+                                    //- Remitente del Mensaje
+                                    div(class="mb-3 flex justify-start items-center")
+                                        label(for="remitente" class="w-16 min-w-16 mr-2") De: 
+                                        input#remitente(name="remitente" class="font-bold p-2 border rounded w-60 text-gray-400" value=`${respuesta.mensaje.email}` disabled)
+                                    //- Destino del Mensaje
+                                    div(class="mb-3 flex justify-start items-center")
+                                        label(for="destino" class="w-16 min-w-16 mr-2") Para: 
+                                        input#destino(name="destino" class="font-bold p-2 border rounded w-60 text-gray-400 truncate" value="asistencia.hoteleria@gmail.com" disabled) 
+                                div(class="flex space-x-4")
+                                    //- Asunto del Mensaje
+                                    div(class="mb-3 flex justify-start items-center")
+                                        label(for="asunto" class="w-16 min-w-16 mr-2") Asunto: 
+                                        input#asunto(name="asunto" class="p-2 border rounded w-60 text-gray-400" value=`${respuesta.mensaje.asunto}` disabled)
+                                    //- Fecha del Mensaje
+                                    div(class="mb-3 flex justify-start items-center")
+                                        label(for="fecha" class="w-16 min-w-16 mr-2") Fecha: 
+                                        if respuesta.mensaje.fechaCreacion
+                                            input#fecha(name="fecha" class="p-2 border rounded w-60 text-gray-400" value=`${respuesta.mensaje.fechaCreacion}` disabled)
+                                        else 
+                                            input#fecha(name="fecha" class="p-2 border rounded w-60" value=`No posee` disabled)
+                                //- Descripción del Mensaje
+                                div(class="flex")
+                                    label(for="cuerpo" class="w-16 min-w-16 mr-2") Cuerpo: 
+                                    textarea#cuerpo(name="cuerpo" class="text-gray-400 text-sm px-2 py-1 block w-9/12 resize-none border rounded" rows="5" disabled)= respuesta.mensaje.descripcion 
+
+                            div(class="w-full border-2 bg-white px-4 py-8 rounded")
+                                h1(class="mb-8 text-center text-3xl mx-auto font-bold font-display text-sky-950") Respuesta Enviada
+                                div(class="flex space-x-4")
+                                    //- Remitente del Mensaje
+                                    div(class="mb-3 flex justify-start items-center")
+                                        label(for="remitente" class="w-16 min-w-16 mr-2") De: 
+                                        input#remitente(name="remitente" class="text-gray-400 font-bold p-2 border rounded w-60" value="asistencia.hoteleria@gmail.com"  disabled)
+                                    //- Destino del Mensaje
+                                    div(class="mb-3 flex justify-start items-center")
+                                        label(for="destino" class="w-16 min-w-16 mr-2") Para: 
+                                        input#destino(name="destino" class="text-gray-400 font-bold p-2 border rounded w-60 truncate" value=`${respuesta.mensaje.email}` disabled) 
+                                
+                                div(class="flex space-x-4")
+                                    //- Asunto del Mensaje
+                                    div(class="mb-3 flex justify-start items-center")
+                                        label(for="asunto" class="w-16 min-w-16 mr-2") Asunto: 
+                                        input#asunto(name="asunto" class="text-gray-400 p-2 border rounded w-60" value=`Re: ${respuesta.mensaje.asunto}` disabled)
+                                    //- Fecha del Mensaje
+                                    div(class="mb-3 flex justify-start items-center")
+                                        label(for="fecha" class="w-16 min-w-16 mr-2") Fecha: 
+                                        if respuesta.fechaCreacion
+                                            input#fecha(name="fecha" class="text-gray-400 p-2 border rounded w-60" value=`${respuesta.fechaCreacion}` disabled)
+                                        else 
+                                            input#fecha(name="fecha" class="text-gray-400 p-2 border rounded w-60" value=`No posee` disabled)
+                                //- Descripción del Mensaje
+                                div(class="flex mb-3")
+                                    label(for="descripcion" class="w-16 min-w-16 mr-2") Cuerpo: 
+                                    textarea#descripcion(name="descripcion" class="text-gray-400 text-sm px-2 py-1 block w-full resize-none border rounded" rows="5" disabled)= respuesta.descripcion
+    
+                        else 
+                            div(class="w-full bg-white border-2 px-4 py-8 rounded relative")
+                                
+                                h1(class="text-center mb-8 text-3xl mx-auto font-bold font-display text-sky-950") Mensaje Cerrado: 
+                                    p(class="first-letter:uppercase inline-block")= mensaje.motivo 
+                                        span  N°
+                                        span= mensaje.id
+                                //- Imagen del Mensaje
+                                div(class="w-100% absolute right-0 mr-4")
+                                    img(src=`/uploads/mensajes/${mensaje.imagen}`, class=`h-[218px] w-[288px] object-cover object-center border-4 border-[rgba(250,250,250,255)] rounded` alt="")
+                                div(class="flex space-x-4")
+                                    //- Remitente del Mensaje
+                                    div(class="mb-3 flex justify-start items-center")
+                                        label(class="w-16 min-w-16 mr-2") De: 
+                                        input(class="text-gray-400 font-bold p-2 border rounded w-60" value=`${mensaje.email}` disabled)
+                                    //- Destino del Mensaje
+                                    div(class="mb-3 flex justify-start items-center")
+                                        label(class="w-16 min-w-16 mr-2") Para: 
+                                        input(class="text-gray-400 font-bold p-2 border rounded w-60 truncate" value="asistencia.hoteleria@gmail.com" disabled) 
+                                div(class="flex space-x-4")
+                                    //- Asunto del Mensaje
+                                    div(class="mb-3 flex justify-start items-center")
+                                        label(class="w-16 min-w-16 mr-2") Asunto: 
+                                        input(class="text-gray-400 p-2 border rounded w-60" value=`${mensaje.asunto}` disabled)
+                                    //- Fecha del Mensaje
+                                    div(class="mb-3 flex justify-start items-center")
+                                        label(class="w-16 min-w-16 mr-2") Fecha: 
+                                        if mensaje.fechaCreacion
+                                            input(class="text-gray-400 p-2 border rounded w-60" value=`${mensaje.fechaCreacion}` disabled)
+                                        else 
+                                            input(class="text-gray-400 p-2 border rounded w-60" value=`No posee` disabled)
+                                //- Descripción del Mensaje
+                                div(class="flex")
+                                    label(class="w-16 min-w-16 mr-2") Cuerpo: 
+                                    textarea(class="text-gray-400 text-sm px-2 py-1 block w-9/12 resize-none border rounded" rows="5" disabled)= mensaje.descripcion
+
+    include ../layout/footer

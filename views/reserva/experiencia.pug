@@ -1,0 +1,19 @@
+extends ../layout/index
+    
+block contenido
+    include ../layout/header
+    div(class="mx-auto flex flex-col")
+                div(class="p-8 bg-white flex flex-col justify-start border-2")
+                    //- Titulo
+                    h1(class="text-center mb-6 text-4xl font-bold font-display text-sky-950")= pagina
+                    //- Errores en caso de mal rellenado o no hay posibles habitaciones
+                    if errores
+                        each error in errores
+                            div(class="max-w-80 gap-[0.5] mx-auto  w-full")
+                                p(class="text-center py-2 my-1 bg-red-700 text-white w-full text-xs font-bold ")=error.msg
+                    p(class="text-xl mb-6 mt-3 text-black text-left") Queremos saber tus gustos y acercarnos un poco mas a ti, queremos que tu experiencia en el hotel sea 
+                        span(class="font-bold") UNICA
+
+                
+                   
+

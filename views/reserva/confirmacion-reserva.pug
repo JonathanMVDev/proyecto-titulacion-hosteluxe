@@ -1,0 +1,51 @@
+extends ../layout/index
+
+block contenido
+    include ../layout/header
+    div(class="w-full flex-1 mb-12")
+        //- Titulo de la pagina
+        h1(class="text-center pt-10 my-12 text-4xl font-bold font-display text-sky-950")= pagina
+
+        div(class="container mx-auto")
+            
+            div(class="border-2 bg-white")
+                div(class=`${administrador ? '' : 'border-b-[2px]' } p-8 grid grid-cols-3`)
+                    div(class="space-y-3")
+                        h1(class="text-left text-3xl font-bold font-display text-sky-950") Reserva: 
+                        p(class="text-sm") ID: 
+                            span= datosReserva.id 
+                        p(class="text-sm") Fecha Inicio: 
+                            span= datosReserva.fechaInicio
+                        p(class="text-sm") Fecha Termino: 
+                            span= datosReserva.fechaFin
+                        p(class="text-sm") Tipo Habitación: 
+                            span= datosReserva.habitacion.tipo.name
+                        p(class="text-sm") Habitación N°: 
+                            span= datosReserva.habitacion.name
+                        p(class="text-sm") N° Dormitorios: 
+                            span= datosReserva.habitacion.dormitorios
+                    div(class="space-y-3")
+                        h1(class="text-left text-3xl font-bold font-display text-sky-950") Cliente: 
+                        p(class="text-sm") Nombre: 
+                            span= datosReserva.usuario.name 
+                        p(class="text-sm") Correo Electronico: 
+                            span= datosReserva.usuario.email
+                        p(class="text-sm") Teléfono: 
+                            span= datosReserva.usuario.telefono
+                    div(class="space-y-3")
+                        h1(class="text-left text-3xl font-bold font-display text-sky-950") Facturación: 
+                        p(class="text-sm") Precio por Dia (
+                            span= datosReserva.habitacion.tipo.name
+                            span ): $
+                            span= datosReserva.habitacion.tipo.diaPrecio
+                        p(class="text-sm") N° de días: 
+                            span= datosReserva.cantidadDias
+                        p(class="text-sm") Total: $
+                            span= datosReserva.montoTotal
+                
+                p(class=`${administrador ? 'hidden' : 'py-2 text-sm text-center col-start-1 col-end-4'}`) Recuerde que la estadía al hotel comienza desde las 7:00 AM y finaliza a las 12:00 PM
+                p(class=`${administrador ? 'hidden' : 'pb-2 text-sm text-center col-start-1 col-end-4'}`) Puede cancelar en cualquier momento su estadía, el monto final de este sera proporcional a los dias en el hotel
+
+        //- pre= JSON.stringify(datosReserva, undefined, 2)
+
+    include ../layout/footer

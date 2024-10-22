@@ -1,0 +1,116 @@
+extends ../layout/index
+    
+block contenido
+    include ../layout/header
+
+    div(class="w-full flex-1 mb-12")
+
+        include ../layout/admin
+        
+        div(class="container mx-auto flex pb-12 items-start")
+
+            //- Tabla de Reservas
+            div(class="mx-auto w-full flex flex-col bg-white p-8 border-2 justify-center")
+                div(class="container grid grid-cols-2 w-full relative mb-6")
+                    h1(class="text-center text-3xl z-0 mx-auto w-full absolute font-bold font-display text-sky-950") Menús
+                    a(href="/administrar/menus/crear-menu" class="static z-10 w-40 flex items-center justify-center text-center px-5 bg-sky-900 hover:bg-sky-600 duration-200 text-white py-3 hover:cursor-pointer uppercase font-bold text-[13px]") Crear Menú
+                    div(class="static z-0")
+                        form(action="/administrar/menus/buscador" method="POST" class="static z-20 flex justify-end items-center space-x-3")
+                            input(type="hidden" name="_csrf" value=csrfToken)
+                            label(for="categoria") Filtrar por:
+                            input(type="hidden" id="categoriaId" value= categoria ? categoria : '')
+                            select#categoria(name="categoria" class="p-2 w-36 border border-gray-300  placeholder-gray-300")
+                                option(value="") Categoria
+                                option(value="1") Entradas
+                                option(value="2") Platos principales
+                                option(value="3") Acompañamientos
+                                option(value="4") Postres
+                                option(value="5") Bebidas alcohólicas
+                                option(value="6") Bebidas sin alcohol   
+                                option(value="7") Bebidas calientes
+                            input(type="hidden" id="subcategoriaId" value= subcategoria ? subcategoria : '')
+                            select#subcategoria(name="subcategoria" disabled class="p-2 w-36 border border-gray-300  placeholder-gray-300")
+                                option(value="" selected) Sub-Categoria
+                            input(type="submit" value="Filtrar" class="w-40 flex items-center justify-center text-center px-5 bg-sky-900 hover:bg-sky-600 duration-200 text-white py-3 hover:cursor-pointer uppercase font-bold text-[13px]")
+
+                    if menus
+                        div(class="grid col-start-1 col-end-3 mt-8 row-start-2 row-end-3")
+                            div(class="grid grid-cols-5 gap-8 w-full")
+                                each menu in menus
+                                    div(class="min-h-[450px] max-h-[800px] border rounded")
+                                        //- Imagen del Card
+                                        div(class="bg-gray-800 p-[7px]")
+                                            img(src=`/uploads/menus/${menu.imagen}`, alt=`imagen de ${menu.name}` class="mx-auto  object-cover h-64 w-64")
+                                        div(class="p-4 gap-2 flex flex-col justify-start")
+                                            
+                                            //- Nombre del Card
+                                            div(class="flex-1 flex flex-col gap-1")
+                                                h1(class="font-bold") Nombre: 
+                                                p(class="inline-block truncate")= menu.name
+                                            
+                                            //- Descripción del Card
+                                            div(class="flex-1 flex flex-col gap-1")
+                                                h1(class="font-bold") Descripcion: 
+                                                p(class="inline-block w-full truncate")= menu.descripcion
+                                            
+                                            //- Categoría del Card
+                                            div(class="flex-1 flex flex-col justify-start items-start")
+                                                h1(class="font-bold") Categoria: 
+                                                p(class="inline-block w-full truncate")= menu.subcategoria.categoria.name
+                                            
+                                            //- Sub-Categoría del Card
+                                            div(class="flex-1 flex flex-col justify-start items-start")
+                                                h1(class="font-bold") Sub-Categoria: 
+                                                p(class="inline-block w-full truncate")= menu.subcategoria.name
+                                            
+                                            //- Precio del Card
+                                            div(class="flex-1 flex justify-start items-end")
+                                                h1(class="font-bold mr-1") Precio: 
+                                                p(class="inline-block") $ 
+                                                p(class="inline-block")= menu.precio
+                                            
+                                            //- Estado del Card
+                                            div(class="flex-1 flex justify-start items-end gap-1 mb-2")
+                                                h1(class="font-bold") Estado: 
+                                                if menu.estado
+                                                    p(class="inline-block") Habilitado 
+                                                else 
+                                                    p(class="inline-block") Deshabilitado
+                                            
+                                            //- Formularios de Modificación
+                                            div(class="space-y-2")
+                                                a(href=`/administrar/menus/modificar-menu/${menu.id}` class="bg-amber-950 text-center block py-2 font-bold text-white cursor-pointer hover:bg-amber-900 duration-200") Modificar
+                                                if menu.estado
+                                                    form(action=`/administrar/menus/alterar-menu/${menu.id}` method="POST")
+                                                        input(type="hidden" name="_csrf" value=csrfToken)
+                                                        input(type="submit" class="bg-gray-900 w-full py-2 font-bold text-white cursor-pointer hover:bg-gray-800 duration-200" value="Deshabilitar") 
+                                                else 
+                                                    form(action=`/administrar/menus/alterar-menu/${menu.id}` method="POST")
+                                                        input(type="hidden" name="_csrf" value=csrfToken)
+                                                        input(type="submit" class="bg-gray-900 w-full py-2 font-bold text-white cursor-pointer hover:bg-gray-800 duration-200" value="Habilitar") 
+                                                form(action=`/administrar/menus/eliminar-menu/${menu.id}` method="POST")
+                                                    input(type="hidden" name="_csrf" value=csrfToken)
+                                                    input(type="submit" class="bg-red-800 w-full py-2 font-bold text-white cursor-pointer hover:bg-red-900 duration-200" value="Eliminar") 
+
+                //- Paginador
+                div(class="border py-3 flex items-center justify-between border-t border-gray-200 px-6")
+                    div(class="flex-1 flex items-center justify-between")
+                        p(class="text-sm text-gray-700 gap-2") Mostrando 
+                            span(class="font-medium") #{offset + 1} a 
+                            span(class="font-medium") #{total < limit + offset ? total : limit + offset} de 
+                            span(class="font-medium") #{total} resultados
+                    div(class="")
+                        nav(class="relative z-0 inline-flex justify-end rounded-md shadow-md")
+                            - var n = 1
+                                while n <= paginas
+                                    if categoria && subcategoria
+                                        a(href=`${buscador === true ? `/administrar/menus/buscador?pagina=${n}&categoria=${categoria}&subcategoria=${subcategoria}` : `/administrar/menus?pagina=${n}`}` class=`${paginaActual == n ? 'pointer-events-none cursor-auto bg-sky-800 border-sky-900 text-white' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'} relative inline-flex items-center px-4 py-2 border text-sm font-medium`) #{n++}  
+                                    else if categoria 
+                                        a(href=`${buscador === true ? `/administrar/menus/buscador?pagina=${n}&categoria=${categoria}` : `/administrar/menus?pagina=${n}`}` class=`${paginaActual == n ? 'pointer-events-none cursor-auto bg-sky-800 border-sky-900 text-white' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'} relative inline-flex items-center px-4 py-2 border text-sm font-medium`) #{n++}  
+                                    else 
+                                        a(href=`/administrar/menus?pagina=${n}` class=`${paginaActual == n ? 'pointer-events-none cursor-auto bg-sky-800 border-sky-900 text-white' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'} relative inline-flex items-center px-4 py-2 border text-sm font-medium`) #{n++}  
+
+    include ../layout/footer
+
+block scripts 
+    script(src="/js/buscadorMenu.js")

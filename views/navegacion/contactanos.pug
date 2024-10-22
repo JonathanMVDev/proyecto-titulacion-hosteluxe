@@ -1,0 +1,68 @@
+extends ../layout/index
+
+block styles
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.css")
+    link(rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="")
+    meta(name="csrf-token" content= csrfToken)
+block contenido
+    include ../layout/header
+
+    //- Container para el Form
+    div(class="w-full flex-1")
+
+        //- Titulo de la pagina
+        h1(class="text-center pt-10 my-12 text-4xl font-bold font-display text-sky-950")= pagina
+
+        div(class="container mx-auto flex pb-12 md:justify-between items-start xl:gap-0 xl:my-0 my-24 flex-col xl:flex-row")
+            
+            div(class="h-[50rem] flex mx-auto bg-white p-8 border-2 flex-col")
+                h1(class="text-center mb-6 text-3xl font-bold font-display text-sky-950") Ubicación
+                div(class="space-y-2")
+                    p(class="my-2") Nuestra ubicación, para resolver tus dudas
+                    div(id="mapa" class="h-96  w-96")
+                    p(class="text-start") Av. Esq. Blanca #501 - Maipú, Región Metropolitana
+                div(class="")
+                    h1(class="text-center my-6 text-3xl font-bold font-display text-sky-950") Teléfono 
+                    p(class="my-2") Atención Directa: +569 2931 5692
+                    p(class="my-2") Horario de atención desde las 7 AM hasta las 10 PM
+            
+            div(class="mx-auto flex flex-col bg-white p-8 border-2 justify-center")
+
+                //- Titulo del Form
+                h1(class="text-center mb-6 text-3xl font-bold font-display text-sky-950") Comunicate
+                //- Errores en caso de mal rellenado o no hay posibles habitaciones
+                if errores
+                    each error in errores
+                        div(class="max-w-80 gap-[0.5] mx-auto  w-full")
+                            p(class="text-center py-2 my-1 bg-red-700 text-white w-full text-xs font-bold ")=error.msg
+
+                div
+                    form(id="Idform" method="POST" action="/contactanos" class="space-y-5" novalidate)
+                        input(type="hidden" value=csrfToken name="_csrf")
+                        div
+                            label(for="motivo" class="block mb-2 uppercase text-sm") Motivo (*)
+                            select(id="motivo" name="motivo" class="appearance-none w-full text-center py-2 border-[1px] border-[#d1d5db] rounded-md")
+                                option(value="") Seleccione
+                                option(value="consulta") Consulta
+                                option(value="queja") Queja
+                                option(value="sugerencia") Sugerencia 
+                        div
+                            label(for="asunto" class="block mb-2 uppercase text-sm") Asunto (*)
+                            input#asunto(type="text" name="asunto" placeholder="Tu Asunto" class="p-2 w-[400px] border border-gray-300 rounded-md placeholder-gray-300") 
+                        div 
+                            label(for="email" class="block mb-2 uppercase text-sm") Correo Electrónico
+                            input#email(type="email" name="email" placeholder="Correo@gmail.com" class="p-2 w-[400px] border border-gray-300 rounded-md placeholder-gray-300") 
+                            
+                        div
+                            label(for="descripcion" class="block mb-2 uppercase text-sm") Descripción (*)
+                            textarea(name="descripcion" id="descripcion" class="resize-none w-full border-[1px] border-[#d1d5db] rounded-md" rows="5") 
+                        div(id="SubirImagen" class="dropzone w-full border-dashed border-2 min:h-96 h-auto rounded flex-col justify-center items-center text-center")
+                        input(name="submi" type="submit" value="Enviar" class="w-full text-center bg-sky-900 hover:bg-sky-600 duration-200 text-white py-2 hover:cursor-pointer uppercase font-bold")
+
+        include ../layout/footer   
+
+
+block scripts
+    script(src="/js/agregarImagen.js")
+    script(src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js")
+    script(src="/js/mapa.js")

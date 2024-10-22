@@ -1,0 +1,48 @@
+extends ../layout/index
+    
+block contenido
+    include ../layout/header
+
+    div(class="w-full flex-1 mb-12")
+
+            //- Titulo de la pagina
+            h1(class="mx-auto text-center pt-10 my-12 text-4xl font-bold font-display text-sky-950")= pagina
+                
+            include ../layout/perfil
+
+            div(class="container mx-auto flex pb-12 items-start")
+                div(class="mx-auto w-full flex flex-col bg-white p-8 border-2 justify-center")
+                    //- Titulo de las reservas
+                    h1(class="text-center mb-6 text-3xl font-bold font-display text-sky-950") Historial
+
+                    if compras.length 
+                        div(class="w-60[rem] mx-auto")
+                            table(class="table-fixed w-full")
+                                thead(class="bg-sky-950 text-white py-2")
+                                    tr(class="")
+                                        th(class="py-2 border-r-2 border-white") N° Habitación y Tipo
+                                        th(class="py-2 border-r-2 border-white") Fecha Compra
+                                        th(class="py-2 border-r-2 border-white") Monto Total
+                                        th(class="py-2 border-r-2 border-white") Estado
+                                        th(class="py-2 border-r-2 border-white") Detalles
+                                tbody 
+                                     each compra in compras 
+                                        tr
+                                            td(class="py-2 border-sky-950 border-b px-2 text-center")= compra.reserva.habitacion.name
+                                                span - 
+                                                span= compra.reserva.habitacion.tipo.name
+                                            td(class="py-2 border-sky-950 border-b px-2 text-center")= compra.fechaCompra
+                                            td(class="py-2 border-sky-950 border-b px-2 text-center") $
+                                                span= compra.total 
+                                            if compra.estado == 1
+                                                td(class="py-2 border-sky-950 border-b px-2 bg-green-200 text-green-950 text-center") En preparación
+                                            else if compra.estado == 2
+                                                td(class="py-2 border-sky-950 border-b px-2 bg-orange-200 text-orange-950 text-center") Enviado
+                                            else
+                                                td(class="py-2 border-sky-950 border-b px-2 bg-slate-200 text-slate-950 text-center") Entregado
+                                            td(class="py-2 border-sky-950 border-b px-2 text-center") 
+                                                a(href=`/mis-compras/${compra.id}`) Ver detalles
+                    else
+                        p(class="text-sm text-center pt-1") No se ha encontrado ningún registro de compra
+
+    include ../layout/footer

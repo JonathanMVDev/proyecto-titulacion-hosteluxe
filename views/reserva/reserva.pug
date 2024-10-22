@@ -1,0 +1,101 @@
+extends ../layout/index
+    
+block contenido
+    include ../layout/header
+
+    //- Container para el Form
+    div(class="w-full flex-1")
+        div(class="flex h-full md:justify-between items-center gap-10 xl:gap-0 xl:my-0 my-24 flex-col xl:flex-row")
+
+            div(class="mx-auto flex flex-col")
+                div(class="p-8 bg-white flex flex-col justify-start border-2")
+                   
+
+                    div(id="formInteres")
+                        //- Titulo
+                        h1(class="text-center mb-6 text-4xl font-bold font-display text-sky-950") ¿Cuáles son tus preferencias?
+                        //- Errores en caso de mal rellenado o no hay posibles habitaciones
+                        if errores
+                            each error in errores
+                                div(class="max-w-80 gap-[0.5] mx-auto  w-full")
+                                    p(class="text-center py-2 my-1 bg-red-700 text-white w-full text-xs font-bold ")=error.msg
+                        
+                        p(class="text-xl mt-3 text-center text-black") Para entregarte el mejor servicio posible, 
+                        p(class="text-xl mb-6 text-center text-black") nos gustaría que nos compartieras tus gustos
+                            
+                        div(class="flex lg:flex-row flex-col gap-6 lg:gap-0 items-center justify-center w-full")
+                            div(class="flex flex-col justify-center w-full")
+                                div(class="flex flex-col w-full space-y-1 items-center mb-4")
+                                    label(for="experiencia" class="block mb-2 uppercase text-sm") Interés Principal
+                                    select#experiencia(name="experiencia" class="text-center py-2 w-full border border-gray-300 rounded-md placeholder-gray-300")  
+                                        option(value="") Seleccione Interés
+                                        option(value="1") Artístico
+                                        option(value="2") Culinario
+                                        option(value="3") Deportivo
+                                div(class="flex flex-col w-full space-y-2 items-center mb-4")
+                                    label(for="preferencia" class="block mb-2 uppercase text-sm") Preferencia
+                                    select#preferencia(name="preferencia" disabled class="text-center py-2 w-full border border-gray-300 rounded-md placeholder-gray-300")  
+                                        option(value="") Seleccione Preferencia
+                                button(id="interesButton" class="pointer-events-none px-4 py-3 text-center w-full lg:w-auto text-white font-bold lg:rounded-l-none bg-gray-400") Enviar 
+
+                    div(id="reservaDiv" class="hidden")
+                        //- Titulo
+                        h1(class="text-center mb-6 text-4xl font-bold font-display text-sky-950")= pagina
+                        //- Errores en caso de mal rellenado o no hay posibles habitaciones
+                        if errores
+                            each error in errores
+                                div(class="max-w-80 gap-[0.5] mx-auto  w-full")
+                                    p(class="text-center py-2 my-1 bg-red-700 text-white w-full text-xs font-bold ")=error.msg
+                        
+                        p(class="text-xl mb-6 mt-3 text-black text-left") Por favor, escoja su tiempo de hospedaje y su tipo de habitación
+
+                        //- Form Registrar Reserva
+                        form(action="/reserva" method="POST")
+                            //- Preferencias del Usuario
+
+                            //- CSRF y fechas seleccionadas en inputs ocultos
+                            input(type="hidden" name="_csrf" value=csrfToken)
+                            input(type="hidden" name="fechaInicio" id="fechaInicio")
+                            input(type="hidden" name="fechaFin" id="fechaTermino")
+                            
+                            input(type="hidden" name="interesPrincipalInput" id="interesPrincipalInput")
+                            input(type="hidden" name="PreferenciaInput" id="PreferenciaInput")
+
+                            div(class="flex lg:flex-row flex-col gap-6 lg:gap-0 items-center justify-center w-full")
+                                div(class="flex justify-center w-full")
+                                    //- SVG Calendar
+                                    label(for="fecha") 
+                                        div(class="rounded-l-xl lg:px-2 px-4 py-3 bg-sky-950")
+                                            svg(class="size-6 text-white" xmlns='http://www.w3.org/2000/svg' fill='none' viewbox='0 0 24 24' stroke-width='1.5' stroke='currentColor')
+                                                path(stroke-linecap='round' stroke-linejoin='round' d='M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z')
+                                        
+                                    //- Seleccionar fechas
+                                    input(type="text" id="fecha" name="fecha" placeholder="Fechas" class="rounded-r-xl lg:rounded-r-none w-full bg-gray-100 text-gray-400 text-center py-3 lg:py-3")
+
+                                div(class="flex justify-center w-full")
+                                    //- SVG Room
+                                    label(for="tipo") 
+                                        div(class="rounded-l-xl lg:rounded-none lg:px-2 px-4 py-3 bg-sky-950")
+                                            svg(class="text-white size-6" xmlns='http://www.w3.org/2000/svg' fill='none' viewbox='0 0 24 24' stroke-width='1.5' stroke='currentColor')
+                                                path(stroke-linecap='round' stroke-linejoin='round' d='m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25')
+
+                                    //- Seleccionar tipo de habitacion
+                                    select(name="tipo" id="tipo" class="rounded-r-xl lg:rounded-r-none w-full cursor-pointer bg-gray-100 text-gray-400 appearance-none text-center  lg:px-0 lg:py-3")
+                                        option(value="" class="") Habitacion
+                                        each tipo in tipos
+                                            option(value= tipo.id )= tipo.name
+                                
+                                //- Submit del Form
+                                input(type="submit" class="px-4 py-3 text-center w-full lg:w-auto  text-white font-bold rounded-r-xl rounded-l-xl lg:rounded-l-none cursor-pointer bg-sky-950 hover:bg-sky-600 duration-200" value="Reservar")
+
+            img(class="object-cover hidden w-full lg:hidden xl:block xl:w-[35rem] 2xl:w-[50rem] mt-10 md:mt-0" src="/img/bg_logged.jpg")
+    include ../layout/footer
+block scripts
+    script(src="/js/datePicker.js")
+    script(src="/js/interesReserva.js")
+
+block styles 
+    link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css")
+    link(rel="stylesheet", href="/css/calendar.css")
+    script(src="https://npmcdn.com/flatpickr/dist/l10n/es.js")
+    

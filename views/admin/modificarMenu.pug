@@ -1,0 +1,97 @@
+extends ../layout/index
+    
+block styles
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.css")
+    meta(name="csrf-token" content= csrfToken)
+
+block contenido
+    include ../layout/header
+
+    div(class="w-full flex-1 mb-12")
+
+            include ../layout/admin
+
+            div(class="container mx-auto flex pb-12 items-start")
+            
+                div(class="mx-auto bg-white p-8 border-2")
+                    input(id="menuId" type="hidden" value= menu ? menu.id : '')
+
+                    div(class="flex flex-col justify-center space-y-5")
+                        //- Titulo del Form
+                        h1(class="text-center mb-6 text-3xl font-bold font-display text-sky-950") Imagen del Menu
+
+                        //- Imagen Actual
+                        div
+                            p(class="block mb-2 uppercase text-sm") Imagen:
+                            img(src=`/uploads/menus/${menu.imagen}`, alt=`imagen de ${menu.name}` class="p-[7px] bg-sky-950 object-cover w-[400px]")
+
+                        //- Input Imagen
+                        div
+                            p(class="block mb-2 uppercase text-sm") Nueva Imagen:
+                            div(id="SubirMenu" class="dropzone w-full border-dashed border-2 min:h-96 h-auto rounded flex-col justify-center items-center text-center")
+            
+                //- Formulario Crear Cliente
+                div(class="mx-auto flex flex-col bg-white p-8 border-2 justify-center")
+                    //- Titulo del Form
+                    h1(class="text-center mb-6 text-3xl font-bold font-display text-sky-950") Modificar Menú
+                    //- Errores en caso de mal rellenado o no hay posibles habitaciones
+                    if errores
+                        each error in errores
+                            div(class="max-w-80 gap-[0.5] mx-auto  w-full")
+                                p(class="text-center py-2 my-1 bg-red-700 text-white w-full text-xs font-bold ")=error.msg
+
+                    div
+                        form#modificarComida(method="POST" action=`/administrar/menus/modificar-menu/${menu.id}` class="space-y-5" novalidate)
+                            input(type="hidden" value=csrfToken name="_csrf")
+
+                            //- Input Nombre
+                            div
+                                label(for="name" class="block mb-2 uppercase text-sm") Nombre
+                                input#name(type="text" name="name" value= menu ? menu.name : '' placeholder="Tu Nombre" class="p-2 w-[400px] border border-gray-300 rounded-md placeholder-gray-300") 
+                            
+                            //- Input Descripción
+                            div
+                                label(for="descripcion" class="block mb-2 uppercase text-sm") Descripción
+                                textarea(name="descripcion" id="descripcion" class="px-1 resize-none w-full border-[1px] border-[#d1d5db] rounded-md" rows="5")= menu ? menu.descripcion : ''
+                            
+                            //- Input Categoria
+                            div
+                                label(for="categoria" class="block mb-2 uppercase text-sm") Categoría
+                                input(id="categoriaId" type="hidden" value= menu ? menu.subcategoria.categoriaId : '')
+                                select#categoria(name="categoria" class="text-center py-2 w-full border border-gray-300 rounded-md placeholder-gray-300")
+                                    option(value="") Seleccione
+                                    option(value="1" selected= menu.subcategoria ? menu.subcategoria.categoriaId === 1 : false) Entradas
+                                    option(value="2" selected= menu.subcategoria ? menu.subcategoria.categoriaId === 2 : false) Platos principales
+                                    option(value="3" selected= menu.subcategoria ? menu.subcategoria.categoriaId === 3 : false) Acompañamientos
+                                    option(value="4" selected= menu.subcategoria ? menu.subcategoria.categoriaId === 4 : false) Postres
+                                    option(value="5" selected= menu.subcategoria ? menu.subcategoria.categoriaId === 5 : false) Bebidas alcohólicas
+                                    option(value="6" selected= menu.subcategoria ? menu.subcategoria.categoriaId === 6 : false) Bebidas sin alcohol
+                                    option(value="7" selected= menu.subcategoria ? menu.subcategoria.categoriaId === 7 : false) Bebidas calientes
+
+                            //- Input Sub-Categoria
+                            div
+                                label(for="subcategoria" class="block mb-2 uppercase text-sm") Sub-Categoría
+                                input(id="subcategoriaId" type="hidden" value= menu ? menu.subcategoriaId : '')
+                                select#subcategoria(name="subcategoria" disabled class="text-center py-2 w-full border border-gray-300 rounded-md placeholder-gray-300")
+                                    option(value="") Seleccione
+
+                            //- Input precio
+                            div
+                                label(for="precio" class="block mb-2 uppercase text-sm") Precio 
+                                input#precio(type="text" name="precio" value= menu ? menu.precio : '' placeholder="Precio" class="w-[100%] p-2 border border-gray-300 rounded-md placeholder-gray-300") 
+                            
+                            //- Input Estado
+                            div
+                                label(for="estado" class="block mb-2 uppercase text-sm") Estado
+                                select#estado(name="estado" class="text-center py-2 w-full border border-gray-300 rounded-md placeholder-gray-300")
+                                    option(value="1" selected= menu.estado === 1) Habilitada
+                                    option(value="0" selected= menu.estado === 2) Inhabilitado
+
+                            input(type="submit" value="Modificar" class="w-full text-center  bg-sky-900 hover:bg-sky-600 duration-200 text-white py-2 hover:cursor-pointer uppercase font-bold")
+            
+    include ../layout/footer
+    //- pre= JSON.stringify(menu, undefined, 2)
+
+block scripts
+    script(src="/js/modificarComida.js")
+    script(src="/js/editarInput.js")

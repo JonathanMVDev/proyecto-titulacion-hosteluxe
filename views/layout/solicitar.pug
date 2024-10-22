@@ -1,0 +1,20 @@
+div(class="flex flex-col space-y-[1px]")
+    div(class="flex justify-between h-12")
+        div(class="flex justify-start space-x-[2px] h-12")
+            div(class="h-full w-36")
+                a(href="/solicitar?categoria=1&pagina=1" class=`${ menu === 'Entradas' ? 'bg-gray-300 text-white pointer-events-none' : 'bg-sky-900 hover:bg-sky-600 duration-200' } text-white h-full flex items-center justify-center text-sm font-bold`) Entradas
+            div(class="h-full w-36")
+                a(href="/solicitar?categoria=2&pagina=1" class=`${ menu === 'Platos principales' ? 'bg-gray-300 text-white pointer-events-none' : 'bg-sky-900 hover:bg-sky-600 duration-200' } text-white h-full flex items-center justify-center text-sm font-bold`) Platos Principales
+            div(class="h-full w-36")
+                a(href="/solicitar?categoria=3&pagina=1" class=`${ menu === 'Acompañamientos' ? 'bg-gray-300 text-white pointer-events-none' : 'bg-sky-900 hover:bg-sky-600 duration-200' } text-white h-full flex items-center justify-center text-sm font-bold`) Acompañamientos
+            div(class="h-full w-36")
+                a(href="/solicitar?categoria=4&pagina=1" class=`${ menu === 'Postres' ? 'bg-gray-300 text-white pointer-events-none' : 'bg-sky-900 hover:bg-sky-600 duration-200' } text-white h-full flex items-center justify-center text-sm font-bold`) Postres
+            div(class="h-full w-36")
+                a(href="/solicitar?categoria=5&pagina=1" class=`${ menu === 'Bebidas alcohólicas' ? 'bg-gray-300 text-white pointer-events-none' : 'bg-sky-900 hover:bg-sky-600 duration-200' } text-white h-full flex items-center justify-center text-sm font-bold`) Bebidas Alcoholicas
+            div(class="h-full w-36")
+                a(href="/solicitar?categoria=6&pagina=1" class=`${ menu === 'Bebidas sin alcohol' ? 'bg-gray-300 text-white pointer-events-none' : 'bg-sky-900 hover:bg-sky-600 duration-200' } text-white h-full flex items-center justify-center text-sm font-bold`) Bebidas Sin Alcohol
+            div(class="h-full w-36")
+                a(href="/solicitar?categoria=7&pagina=1" class=`${ menu === 'Bebidas calientes' ? 'bg-gray-300 text-white pointer-events-none' : 'bg-sky-900 hover:bg-sky-600 duration-200' } text-white h-full flex items-center justify-center text-sm font-bold`) Bebidas Calientes
+        div(class="h-full flex justify-end space-x-[2px]")
+            a(href="/solicitar/carro" class=`${ carrito ? 'bg-gray-300 text-white pointer-events-none' : 'bg-sky-900 hover:bg-sky-600 duration-200' } h-full flex w-36 justify-center items-center`)
+                img(src=`${ carrito ? '/img/svg/falseCarrito.svg' : '/img/svg/trueCarrito.svg'}`, class="size-5" alt="")

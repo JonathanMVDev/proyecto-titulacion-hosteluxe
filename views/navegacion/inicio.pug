@@ -1,0 +1,64 @@
+extends ../layout/index
+    
+block contenido
+    include ../layout/header
+
+    //- Container para el Form
+    div(class="w-full flex-1 mb-24")
+
+        h1(class="text-center mt-[5.5rem] text-4xl font-bold font-display text-sky-950")= pagina
+
+        div(class="mt-20 pt-4 bg-sky-950 w-full")
+        div
+            //- Primera Fila del Grid
+            div(class="grid grid-cols-[1fr_2fr_1fr] w-full")
+                div(class="bg-sky-950 h-[25rem] w-full")
+                div(class="flex flex-col border-y-8 border-x-[40px] border-sky-950 w-full mx-auto justify-center gap-7 h-full items-center p-6")
+                    h1(class="text-center text-3xl font-display text-sky-950") Somos una empresa catalogada como 
+                        br
+                        | una de las mejores en el servicio de
+                        br 
+                        span(class="font-extrabold") Hoteleria
+                    p(class="") Para realizar una reserva con nosotros puedes acceder al siguiente enlace 
+                    a(href="/reserva" class="px-8 py-2 mt-2 text-white bg-sky-950 hover:bg-sky-600 duration-200  text-center font-extrabold ") Reserva Aqui
+                    p(class="text-sm") Si deseas conocer mas información de nosotros, puedes descender sobre la página
+                div(class="bg-sky-950 h-[25rem] w-full")
+
+        //- Espacio entre grid
+        div(class="mb-20 pt-4 bg-sky-950 w-full")
+        div(class="py-12")
+        
+
+        div
+            //- Segunda Fila del Grid
+            div(class="grid grid-cols-[2fr_1fr]")
+                div(class="h-[21rem] flex items-center bg-sky-950")
+                    div(class="p-12 h-full flex items-center flex-col justify-center space-y-8")
+                        h1(class="text-center text-3xl font-display text-white") Servicio de Calidad
+                        p(class="text-sm text-center text-white") En los años de trayectoria hemos aprendido multiples tecnicas que nos garantizaran darte el mejor servicio que querras obtener
+                        p(class="text-sm text-center text-white") No solo somos los mejores en lo que hacemos, si no que somos los mejores en lo que tu quieres 
+                    div(class="p-12 h-full flex items-center flex-col justify-center")
+                        h1(class="text-center text-3xl font-display text-white") Si quieres conocer más de nuestros servicios, presiona
+                        a(href="/habitaciones" class="text-center text-white text-3xl font-display font-extrabold") aquí 
+                img(class="h-[21rem] object-cover border-y-8 w-full border-sky-950" src="/img/inicio.jpg")
+            
+        div(class="py-12")
+        //- Espacio entre el Grid
+
+        div(class="flex")
+            //- Tercer Fila del Grid
+            div(class="grid grid-cols-[1fr_2fr]")
+                img(class="object-cover border-y-8 w-full border-sky-950" src="/img/inicio_grid_3.jpg")
+                div(class="flex bg-sky-950")
+                    div(class="p-12 h-full flex items-center flex-col justify-center space-y-8")
+                        h1(class="text-center text-3xl font-display text-white") ¿Alguna Pregunta?
+                        p(class="text-sm text-center text-white") Si tienes alguna consulta sobre nuestro servicio, o si aun no tienes claro y necesitas una asesoría, puedes contactarnos facilmente desde nuestro formulario
+                        p(class="text-sm text-center text-white") También puedes llamarnos al número indicado al comienzo del página, por último te indicamos que las respuestas de nuestros ejecutivos serán respondidas via correo electronico
+                    div(class="p-12 h-full flex items-center flex-col justify-center")
+                        h1(class="text-center text-3xl font-display text-white") Para acceder al formulario de consultas, haz click 
+                        a(href="/contactanos" class="text-center text-white text-3xl font-display font-extrabold") aquí 
+                    
+
+
+
+    include ../layout/footer

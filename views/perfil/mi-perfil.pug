@@ -1,0 +1,103 @@
+extends ../layout/index
+    
+block contenido
+    include ../layout/header
+
+    div(class="w-full flex-1 mb-12")
+
+            //- Titulo de la pagina
+            h1(class="mx-auto text-center pt-10 my-12 text-4xl font-bold font-display text-sky-950")= pagina
+                
+            include ../layout/perfil
+
+            div(class="container mx-auto flex pb-12 items-start")
+                
+                //- Formulario Modificar Datos
+                div(class="mx-auto flex flex-col bg-white p-8 border-2 justify-center")
+                    //- Titulo del Form
+                    h1(class="text-center mb-6 text-3xl font-bold font-display text-sky-950") Datos Personales
+                    //- Errores en caso de mal rellenado o no hay posibles habitaciones
+                    if mensajeDatos
+                        div(class="max-w-80 gap-[0.5] mx-auto  w-full")
+                                p(class="text-center py-2 my-1 bg-green-700 text-white w-full text-xs font-bold ")= mensajeDatos
+                    if erroresDatos
+                        each error in erroresDatos
+                            div(class="max-w-80 gap-[0.5] mx-auto  w-full")
+                                p(class="text-center py-2 my-1 bg-red-700 text-white w-full text-xs font-bold ")=error.msg
+
+                    div
+                        form(method="POST" action="/perfil-datos" class="space-y-5" novalidate)
+                            input(type="hidden" value=csrfToken name="_csrf")
+
+                            //- Input Nombre
+                            div
+                                label(for="name" class="block mb-2 uppercase text-sm") Nombre
+                                input#name(type="text" name="name" placeholder="Tu Nombre" value=usuario.name class="p-2 w-[400px] border border-gray-300 rounded-md placeholder-gray-300") 
+                            div(class="flex justify-between w-[400px]")
+                                //- Input Apellido Paterno
+                                div(class="w-[49%]")
+                                    label(for="paterno" class="block mb-2 uppercase text-sm") Apellido Paterno
+                                    input#paterno(type="text" name="paterno" placeholder="Tu Apellido Paterno" value=usuario.paterno : '' class="w-[100%] p-2 border border-gray-300 rounded-md placeholder-gray-300") 
+                                //- Input Apellido Materno
+                                div(class="w-[49%]")
+                                    label(for="materno" class="block mb-2 uppercase text-sm") Apellido Materno
+                                    input#materno(type="text" name="materno" placeholder="Tu Apellido Materno" value=usuario.materno : '' class="w-[100%] p-2 border border-gray-300 rounded-md placeholder-gray-300") 
+                            //- Input Nombre
+                            div
+                                p(class="block mb-2 uppercase text-sm") Género
+                                    div(class="flex items-center gap-4")
+                                        div(class="flex items-center gap-1")
+                                            input#masculino(type="radio" name="genero" disabled checked=usuario.genero === 'masculino')
+                                            label(for="masculino" class="block text-sm") Masculino
+                                        div(class="flex items-center gap-1")
+                                            input#femenino(type="radio" name="genero" disabled checked=usuario.genero === 'femenino')
+                                            label(for="femenino" class="block text-sm") Femenino
+                            //- Input Correo
+                            div
+                                label(for="email" class="block mb-2 uppercase text-sm") Correo Electrónico
+                                input#email(type="email" name="email" placeholder="Correo@gmail.com" class="p-2 w-[400px] border border-gray-300 rounded-md placeholder-gray-300" value=usuario ? usuario.email : '') 
+                            
+                            //- Input Telefono
+                            div
+                                label(for="telefono" class="block mb-2 uppercase text-sm") Teléfono
+                                div(class="flex justify-between w-[400px]")
+                                    p(class="p-2 w-[15%] border border-gray-300 rounded-md placeholder-gray-300") +569 
+                                    input#telefono(type="text" name="telefono" placeholder="Tu Teléfono" value=usuario.telefono class="p-2 w-[83%] border border-gray-300 rounded-md placeholder-gray-300") 
+                            
+                            input(type="submit" value="Modificar Datos" class="w-full text-center bg-sky-900 hover:bg-sky-600 duration-200 text-white py-2 hover:cursor-pointer uppercase font-bold")
+            
+                div(class="mx-auto flex flex-col bg-white p-8 border-2 justify-center")
+                    //- Titulo del Form
+                    h1(class="text-center mb-6 text-3xl font-bold font-display text-sky-950") Cambiar Contraseña
+                    //- Errores en caso de mal rellenado o no hay posibles habitaciones
+                    if mensajeContraseña
+                        div(class="max-w-80 gap-[0.5] mx-auto  w-full")
+                                p(class="text-center py-2 my-1 bg-green-700 text-white w-full text-xs font-bold ")= mensajeContraseña
+                    if erroresContraseñas
+                        each error in erroresContraseñas
+                            div(class="max-w-80 gap-[0.5] mx-auto  w-full")
+                                p(class="text-center py-2 my-1 bg-red-700 text-white w-full text-xs font-bold ")=error.msg
+
+                    //- Formulario Cambiar Contraseña
+                    div
+                        form(method="POST" action="/perfil-password" class="space-y-5" novalidate)
+                            input(type="hidden" value=csrfToken name="_csrf")
+
+                            //- Input Contraseña
+                            div
+                                label(for="password" class="block mb-2 uppercase text-sm") Contraseña Actual
+                                input#password(type="password" name="password" placeholder="Tu Contraseña Actual" class="p-2 w-[400px] border border-gray-300 rounded-md placeholder-gray-300") 
+                            
+                            //- Input Nueva Contraseña
+                            div
+                                label(for="passwordNueva" class="block mb-2 uppercase text-sm") Nueva Contraseña
+                                input#passwordNueva(type="password" name="passwordNueva" placeholder="Tu Nueva Contraseña" class="p-2 w-[400px] border border-gray-300 rounded-md placeholder-gray-300") 
+                            
+                            //- Input Repite Nueva Contraseña
+                            div
+                                label(for="repetir_passwordNueva" class="block mb-2 uppercase text-sm") Repite Tu Nueva Contraseña
+                                input#repetir_passwordNueva(type="password" name="repetir_passwordNueva" placeholder="Repite Nueva Contraseña" class="p-2 w-[400px] border border-gray-300 rounded-md placeholder-gray-300") 
+                            
+                            input(type="submit" value="Cambiar Contraseña" class="w-full text-center  bg-sky-900 hover:bg-sky-600 duration-200 text-white py-2 hover:cursor-pointer uppercase font-bold")
+
+    include ../layout/footer

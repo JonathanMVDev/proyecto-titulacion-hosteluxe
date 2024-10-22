@@ -1,0 +1,158 @@
+extends ../layout/index
+    
+block contenido
+    include ../layout/header
+
+    div(class="w-full flex-1 mb-12")
+
+        include ../layout/admin
+        
+        div(class="grid grid-cols-2 container mx-auto gap-10")
+            div(class="flex flex-col gap-6")
+                h1(class="col-start-1 col-end-3 mx-auto text-3xl font-bold font-display text-sky-950 justify-center") Mes Actual
+                div(class="grid grid-cols-2 gap-y-3 gap-x-3")
+                    //- Tabla Usuarios 
+                    div(class="flex flex-col gap-4 border-2 p-3") 
+                        h1(class="mx-auto text-center text-xl font-bold font-display text-sky-950") Usuarios
+                        div(class="flex justify-between")
+                            p(class="text-sm") N° Usuarios Nuevos:
+                            p(class="text-sm font-bold")= usuariosNuevosActual
+                        div(class="flex justify-between")
+                            p(class="text-sm") Distribuición de Géneros:
+                            p(class="text-sm font-bold") #{((hombresActual/usuariosNuevosActual)*100).toFixed(2)}% (M) / #{((mujeresActual/usuariosNuevosActual)*100).toFixed(2)}% (F)
+                        div(class="flex justify-between")
+                            p(class="text-sm") Usuarios nuevos que reservaron (%):
+                            p(class="text-sm font-bold") #{(reservaUsuariosNuevosActual/usuariosNuevosActual)*100}%
+                    //- Tabla Reservas
+                    div(class="flex flex-col gap-3 border-2 p-3") 
+                        h1(class="mx-auto text-center text-xl font-bold font-display text-sky-950") Reservas
+                        div(class="flex justify-between")
+                            p(class="text-sm") Reservas generadas:
+                            p(class="text-sm font-bold")= reservasNuevasActual
+                        div(class="flex justify-between")
+                            p(class="text-sm") Día con más reservas:
+                            p(class="text-sm font-bold") #{diaConMasReservasActual.get('dia')} (Cant.:#{diaConMasReservasActual.get('totalReservas')})
+                        div(class="flex justify-between")
+                            p(class="text-sm") Hab. preferida:
+                            p(class="text-sm font-bold") #{tipoHabitacionMasOcupadaActual.get('tipoHabitacion')} (#{tipoHabitacionMasOcupadaActual.get('totalReservas')} reservas) 
+                        div(class="flex justify-between")
+                            p(class="text-sm") Hab. menos preferida:
+                            p(class="text-sm font-bold") #{tipoHabitacionMenosOcupadaActual.get('tipoHabitacion')} (#{tipoHabitacionMenosOcupadaActual.get('totalReservas')} reservas)
+                    //- Tabla Mensajes
+                    div(class="flex flex-col gap-3 border-2 p-3") 
+                        h1(class="mx-auto text-center text-xl font-bold font-display text-sky-950") Mensajes
+                        div(class="flex justify-between")
+                            p(class="text-sm") Mensajes nuevos:
+                            p(class="text-sm font-bold")= mensajesNuevosActual
+                        div(class="flex justify-between")
+                            p(class="text-sm") Mensajes respondidos:
+                            p(class="text-sm font-bold")= mensajesRespondidosActual
+                        div(class="flex justify-between")
+                            p(class="text-sm") Mayor tipo de mensajes:
+                            p(class="text-sm font-bold first-letter:uppercase") #{mayorMotivoMensaje.get('motivo')} (#{mayorMotivoMensaje.get('totalMensajes')})
+                        div(class="flex justify-between")
+                            p(class="text-sm") Menor tipo de mensajes:
+                            p(class="text-sm font-bold first-letter:uppercase") #{menorMotivoMensaje.get('motivo')}
+
+                    //- Tabla Menús
+                    div(class="flex flex-col gap-3 border-2 p-3") 
+                        h1(class="mx-auto text-center text-xl font-bold font-display text-sky-950") Menús
+                        div(class="flex justify-between")
+                            p(class="text-sm") Plato favorito:
+                            p(class="text-sm font-bold") 
+                        div(class="flex justify-between")
+                            p(class="text-sm") Plato menos favorito:
+                            p(class="text-sm font-bold") 
+                        div(class="flex justify-between")
+                            p(class="text-sm") Dinero Generado:
+                            p(class="text-sm font-bold") 
+                    //- Tabla Financiamiento
+                    div(class="col-start-1 col-end-3 flex flex-col gap-3 border-2 p-3") 
+                        h1(class="mx-auto text-center text-xl font-bold font-display text-sky-950") Financiamiento
+                        div(class="flex justify-between")
+                            p(class="text-sm") Dinero obtenido en reservas:
+                            p(class="text-sm font-bold") 
+                        div(class="flex justify-between")
+                            p(class="text-sm") Dinero obtenido en pedidos:
+                            p(class="text-sm font-bold") 
+                        div(class="flex justify-between")
+                            p(class="text-sm") Promedio de días por reserva:
+                            p(class="text-sm font-bold") 
+                        div(class="flex justify-between")
+                            p(class="text-sm") Promedio de dinero por reserva:
+                            p(class="text-sm font-bold") 
+                            
+            div(class="flex flex-col gap-6")
+                h1(class="col-start-1 col-end-3 mx-auto text-3xl font-bold font-display text-sky-950 justify-center") Mes Anterior
+                div(class="grid grid-cols-2 gap-y-3 gap-x-3")
+                    //- Tabla Usuarios 
+                    div(class="flex flex-col gap-4 border-2 p-3") 
+                        h1(class="mx-auto text-center text-xl font-bold font-display text-sky-950") Usuarios
+                        div(class="flex justify-between")
+                            p(class="text-sm") N° Usuarios Nuevos:
+                            p(class="text-sm font-bold") 1
+                        div(class="flex justify-between")
+                            p(class="text-sm") Distribuición de Géneros:
+                            p(class="text-sm font-bold") 1
+                        div(class="flex justify-between")
+                            p(class="text-sm") Usuarios nuevos que reservaron (%):
+                            p(class="text-sm font-bold") 1
+                    //- Tabla Reservas
+                    div(class="flex flex-col gap-3 border-2 p-3") 
+                        h1(class="mx-auto text-center text-xl font-bold font-display text-sky-950") Reservas
+                        div(class="flex justify-between")
+                            p(class="text-sm") Reservas generadas:
+                            p(class="text-sm font-bold") 2
+                        div(class="flex justify-between")
+                            p(class="text-sm") Día con más reservas:
+                            p(class="text-sm font-bold") 2
+                        div(class="flex justify-between")
+                            p(class="text-sm") Tipo de habitación preferida:
+                            p(class="text-sm font-bold") 2
+                        div(class="flex justify-between")
+                            p(class="text-sm") Tipo de habitación menos preferida:
+                            p(class="text-sm font-bold") 2 
+                    //- Tabla Mensajes
+                    div(class="flex flex-col gap-3 border-2 p-3") 
+                        h1(class="mx-auto text-center text-xl font-bold font-display text-sky-950") Mensajes
+                        div(class="flex justify-between")
+                            p(class="text-sm") Mensajes nuevos:
+                            p(class="text-sm font-bold") 3
+                        div(class="flex justify-between")
+                            p(class="text-sm") Mensajes respondidos:
+                            p(class="text-sm font-bold") 3
+                        div(class="flex justify-between")
+                            p(class="text-sm") Mayor tipo de mensajes:
+                            p(class="text-sm font-bold") 3
+                        div(class="flex justify-between")
+                            p(class="text-sm") Menor tipo de mensajes:
+                            p(class="text-sm font-bold") 3
+                    //- Tabla Menús
+                    div(class="flex flex-col gap-3 border-2 p-3") 
+                        h1(class="mx-auto text-center text-xl font-bold font-display text-sky-950") Menús
+                        div(class="flex justify-between")
+                            p(class="text-sm") Plato favorito:
+                            p(class="text-sm font-bold") 4
+                        div(class="flex justify-between")
+                            p(class="text-sm") Plato menos favorito:
+                            p(class="text-sm font-bold") 4
+                        div(class="flex justify-between")
+                            p(class="text-sm") Promedio gastado en menus por reserva:
+                            p(class="text-sm font-bold") 4
+                    //- Tabla Financiamiento
+                    div(class="col-start-1 col-end-3 flex flex-col gap-3 border-2 p-3") 
+                        h1(class="mx-auto text-center text-xl font-bold font-display text-sky-950") Financiamiento
+                        div(class="flex justify-between")
+                            p(class="text-sm") Dinero obtenido en reservas:
+                            p(class="text-sm font-bold") 5
+                        div(class="flex justify-between")
+                            p(class="text-sm") Dinero obtenido en pedidos:
+                            p(class="text-sm font-bold") 5
+                        div(class="flex justify-between")
+                            p(class="text-sm") Promedio de días por reserva:
+                            p(class="text-sm font-bold") 5
+                        div(class="flex justify-between")
+                            p(class="text-sm") Promedio de dinero por reserva:
+                            p(class="text-sm font-bold") 5
+                
+    include ../layout/footer

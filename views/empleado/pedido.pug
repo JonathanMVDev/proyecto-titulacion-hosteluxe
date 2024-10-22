@@ -1,0 +1,71 @@
+extends ../layout/index
+    
+block contenido
+    include ../layout/header
+
+    div(class="w-full flex-1 mb-12")
+
+            //- Titulo de la pagina
+            h1(class="mx-auto text-center pt-10 my-12 text-4xl font-bold font-display text-sky-950")= pagina
+            
+            if cuentaId == 5
+                include ../layout/supervisar
+            div(class="container mx-auto flex pb-12 items-start")
+                
+                
+                //- Tabla de Recepcion
+                div(class="mx-auto w-full flex flex-col bg-white p-8 border-2 justify-center")
+                    
+                    div(class="relative flex justify-center w-full h-full items-center mb-8")
+                        //- Fecha de Hoy
+                        div(class="absolute flex items-center w-full h-full space-x-2")
+                            h1(class="text-base font-bold text-sky-950") Fecha de Hoy:
+                            p(class="text-base")= fecha
+
+                        //- Titulo de las Recepciones
+                        h1(class="text-center text-3xl font-bold font-display text-sky-950") Pedidos
+                    
+                    div(class="space-y-2")
+                        if pedidos.length
+                            each pedido in pedidos 
+                                div(class="w-full border-2 rounded-md py-6 px-3 grid grid-cols-6 h-44")
+                                    div(class="border-r-2 pl-2 h-full flex flex-col justify-center space-y-2")
+                                        h1(class="text-base font-bold") Cliente:
+                                        p(class="text-sm")= pedido.reserva.usuario.name
+                                    div(class="my-auto border-r-2 pl-2 h-full flex flex-col justify-center space-y-2")
+                                        h1(class="text-base font-bold") Tipo y N° Habitación:
+                                        p(class="text-sm") #{pedido.reserva.habitacion.tipo.name} (#{pedido.reserva.habitacion.name})
+                                    div(class="my-auto border-r-2 pl-2 h-full flex flex-col justify-center space-y-2")
+                                        h1(class="text-base font-bold") Hora Compra:
+                                        p(class="text-sm")= pedido.fechaCompra
+                                    div(class="my-auto pl-2 col-start-4 col-end-6")
+                                        h1(class="text-base font-bold ") Comanda:
+                                        ul(class="flex flex-col")
+                                            div(class="flex")
+                                                div(class="mr-2 w-[20px] max-w-[20px]")
+                                                    li(class="text-base font-bold") N°
+                                                div(class="w-40 mr-12")
+                                                    li(class="text-base font-bold") Platillo
+                                                div(class="w-40")
+                                                    li(class="text-base font-bold") Cant.:
+                                            each detalles, index in pedido.detalleCompras
+                                                div(class="flex")
+                                                    div(class="mr-2 w-[20px] max-w-[20px]")
+                                                        li(class="text-base") #{index+1}:   
+                                                    div(class="w-40 mr-12")
+                                                        li(class="text-base truncate")= detalles.name   
+                                                    div(class="w-40")
+                                                        li(class="")= detalles.cantidad
+                                    div(class="my-auto mx-2 space-y-2 h-full flex flex-col justify-center")
+                                        h1(class="text-base font-bold text-center") ¿Pedido Preparado?
+                                        form(action=`/pedido/despacho/${pedido.id}` method="POST")
+                                            input(type="hidden" name="_csrf" value=csrfToken)
+                                            input(type="submit" value="Confirmar" class="mx-auto block w-full text-white py-2 px-3 bg-green-600 font-bold text-center hover:bg-green-700 cursor-pointer duration-200")
+                        else
+                            p(class="text-sm text-center") No hay pedidos actualmente.
+
+    include ../layout/footer
+
+block scripts 
+    if cuentaId == 5
+        script(src="js/supervisar.js")

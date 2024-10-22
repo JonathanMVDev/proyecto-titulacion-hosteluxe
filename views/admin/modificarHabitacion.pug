@@ -1,0 +1,63 @@
+extends ../layout/index
+    
+block contenido
+    include ../layout/header
+
+    div(class="w-full flex-1 mb-12")
+
+            include ../layout/admin
+            div(class="container mx-auto flex pb-12 items-start")
+                
+                //- Formulario Crear Cliente
+                div(class="mx-auto flex flex-col bg-white p-8 border-2 justify-center")
+                    h1(class="text-center mb-6 text-3xl font-bold font-display text-sky-950") Modificar Habitación
+                    
+                    //- Errores en caso de mal rellenado o no hay posibles habitaciones
+                    if errores
+                        each error in errores
+                            div(class="max-w-80 gap-[0.5] mx-auto  w-full")
+                                p(class="text-center py-2 my-1 bg-red-700 text-white w-full text-xs font-bold ")=error.msg
+
+                    div
+                        form(method="POST" action=`/administrar/habitaciones/modificar-habitacion/${habitacion.id}` class="space-y-5" novalidate)
+                            input(type="hidden" value=csrfToken name="_csrf")
+
+                            //- Input Nombre
+                            div
+                                label(for="name" class="block mb-2 uppercase text-sm") Número de Habitación
+                                input#name(type="text" name="name" disabled value= habitacion ? habitacion.name : '' class="p-2 w-[400px] border border-gray-300 rounded-md placeholder-gray-300") 
+                            
+                            //- Input Tipo de Habitación
+                            div
+                                label(for="name" class="block mb-2 uppercase text-sm") Tipo de Habitación
+                                input#name(type="text" name="name" disabled value= habitacion ? habitacion.tipo.name : '' class="p-2 w-[400px] border border-gray-300 rounded-md placeholder-gray-300") 
+                            
+                            //- Input Dormitorios
+                            div
+                                label(for="dormitorios" class="block mb-2 uppercase text-sm") N° de Dormitorios
+                                input#name(type="text" name="dormitorios" disabled value= habitacion ? habitacion.dormitorios : '' class="p-2 w-[400px] border border-gray-300 rounded-md placeholder-gray-300") 
+                            
+                            //- Input Estado
+                            div
+                                label(for="estado" class="block mb-2 uppercase text-sm") Estado
+                                select#estado(name="estado" class="p-2 border border-gray-300 w-full placeholder-gray-300")  
+                                    option(value="1" selected= habitacion.estado === 1) Disponible
+                                    option(value="2" selected= habitacion.estado === 2) No Disponible
+                                    option(value="3" selected= habitacion.estado === 3) Requiere Limpieza
+                            
+                            //- Input Habilitado
+                            div
+                                label(for="habilitado" class="block mb-2 uppercase text-sm") ¿Habilitada?
+                                select#habilitado(name="habilitado" class="p-2 border border-gray-300 w-full placeholder-gray-300")
+                                    option(value="1" selected= habitacion.habilitado == 1) Sí
+                                    option(value="0" selected= habitacion.habilitado == 0) No
+                            
+                            input(type="submit" value="Modificar" class="w-full text-center  bg-sky-900 hover:bg-sky-600 duration-200 text-white py-2 hover:cursor-pointer uppercase font-bold")
+                        p(class="text-sm text-center pt-4") Deshabilitar la habitación hará que dejen de 
+                        p(class="text-sm text-center pt-1") estar disponible para las próximas reservas.
+                        p(class="text-sm text-center pt-2") Utilize esta función solo en caso de ser necesario.
+                
+    include ../layout/footer
+
+block scripts
+    script(src="/js/inputCorreo.js")

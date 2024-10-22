@@ -1,0 +1,46 @@
+extends ../layout/index
+    
+block contenido
+    include ../layout/header
+
+    div(class="w-full flex-1 mb-12")
+
+        include ../layout/admin
+
+        div(class="container mx-auto flex pb-12 items-start")    
+            //- Tabla de Reservas
+            div(class="mx-auto w-full flex flex-col bg-white p-8 border-2 justify-center")
+                //- Titulo de las reservas
+                h1(class="text-center mb-6 text-3xl font-bold font-display text-sky-950") Historial (Usuario: #{cliente.name} #{cliente.paterno})
+                
+                if reservas.length
+                    div(class="w-60[rem] mx-auto")
+                    table(class="table-fixed w-full")
+                        thead(class="bg-sky-950 text-white py-2")
+                            tr(class="")
+                                th(class="py-2 border-r-2 border-white") Habitación
+                                th(class="py-2 border-r-2 border-white") Fecha Inicio
+                                th(class="py-2 border-r-2 border-white") Fecha Termino
+                                th(class="py-2 border-r-2 border-white") N° Días
+                                th(class="py-2 border-r-2 border-white flex justify-center gap-1 items-center") Fecha Emisión
+                                    span
+                                        svg(class="size-5" xmlns='http://www.w3.org/2000/svg' fill='none' viewbox='0 0 24 24' stroke-width='1.5' stroke='currentColor')
+                                            path(stroke-linecap='round' stroke-linejoin='round' d='M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3')
+                                th(class="py-2 border-r-2 border-white") Estado
+                                th(class="py-2") Mas información
+                        tbody
+                            each reserva in reservas
+                                tr
+                                    td(class="py-2 border-sky-950 border-b px-2")= reserva.habitacion.name 
+                                    td(class="py-2 border-sky-950 border-b px-2")= reserva.fechaInicio
+                                    td(class="py-2 border-sky-950 border-b px-2")= reserva.fechaFin
+                                    td(class="py-2 border-sky-950 border-b px-2")= reserva.cantidadDias
+                                    td(class="py-2 border-sky-950 border-b px-2")= reserva.fechaCreacion
+                                    td(class=`${reserva.recepcionado == 1 ? 'bg-green-200 text-green-950' : reserva.recepcionado == 2 ? 'bg-slate-200 text-slate-950' : 'bg-orange-200 text-orange-950' } py-2 border-sky-950 border-b px-2 text-center`)= reserva.recepcionado == 1 ? 'En Curso' : reserva.recepcionado == 2 ? 'Finalizada' : 'En espera'
+                                    td(class="py-2 border-sky-950 border-b px-2")
+                                        a(href=`/reserva/${reserva.id}` class="cursor-pointer text-sky-950 text-center block") Ver completo 
+
+                else
+                    p(class="text-sm text-center") No hay reservas para mostrar
+
+    include ../layout/footer
