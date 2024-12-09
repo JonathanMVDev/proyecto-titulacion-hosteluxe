@@ -295,6 +295,11 @@ const validarCambioPassword = async (req, res) => {
     })
 }
 
+const logout = (req, res) => {
+    res.clearCookie('_token', { path: '/' });
+    return res.redirect('/');
+}
+
 export {
     registro,
     ingresarRegistro,
@@ -304,5 +309,6 @@ export {
     recuperar,
     ingresarRecuperar,
     cambiarPassword,
-    validarCambioPassword
+    validarCambioPassword,
+    logout
 }

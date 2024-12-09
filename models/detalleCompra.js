@@ -19,7 +19,7 @@ const detalleCompra = db.define('detalleCompras',{
         allowNull: false
     }
 },{
-    timestamps:false,
+    timestamps: true,
 })
 
 export default detalleCompra

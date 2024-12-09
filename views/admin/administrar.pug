@@ -16,71 +16,119 @@ block contenido
                         h1(class="mx-auto text-center text-xl font-bold font-display text-sky-950") Usuarios
                         div(class="flex justify-between")
                             p(class="text-sm") N° Usuarios Nuevos:
-                            p(class="text-sm font-bold")= usuariosNuevosActual
+                            if usuariosNuevosActual
+                                p(class="text-sm font-bold")= usuariosNuevosActual
+                            else 
+                                p(class="text-sm font-bold") No existe información
                         div(class="flex justify-between")
                             p(class="text-sm") Distribuición de Géneros:
-                            p(class="text-sm font-bold") #{((hombresActual/usuariosNuevosActual)*100).toFixed(2)}% (M) / #{((mujeresActual/usuariosNuevosActual)*100).toFixed(2)}% (F)
+                            if  hombresActual && usuariosNuevosActual
+                                p(class="text-sm font-bold") #{((hombresActual/usuariosNuevosActual)*100).toFixed(2)}% (M) / #{((mujeresActual/usuariosNuevosActual)*100).toFixed(2)}% (F)
+                            else 
+                                p(class="text-sm font-bold") No existe información
                         div(class="flex justify-between")
                             p(class="text-sm") Usuarios nuevos que reservaron (%):
-                            p(class="text-sm font-bold") #{(reservaUsuariosNuevosActual/usuariosNuevosActual)*100}%
+                            if usuariosNuevosActual == 0
+                                p(class="text-sm text-right font-bold") No se registraron usuarios 
+                            else 
+                                p(class="text-sm font-bold") #{(reservaUsuariosNuevosActual/usuariosNuevosActual)*100}%
                     //- Tabla Reservas
                     div(class="flex flex-col gap-3 border-2 p-3") 
                         h1(class="mx-auto text-center text-xl font-bold font-display text-sky-950") Reservas
                         div(class="flex justify-between")
                             p(class="text-sm") Reservas generadas:
-                            p(class="text-sm font-bold")= reservasNuevasActual
+                            if reservasNuevasActual
+                                p(class="text-sm font-bold")= reservasNuevasActual
+                            else 
+                                p(class="text-sm font-bold") No existe información
                         div(class="flex justify-between")
                             p(class="text-sm") Día con más reservas:
-                            p(class="text-sm font-bold") #{diaConMasReservasActual.get('dia')} (Cant.:#{diaConMasReservasActual.get('totalReservas')})
+                            if diaConMasReservasActual
+                                p(class="text-sm font-bold") #{diaConMasReservasActual.get('dia')} (Cant.:#{diaConMasReservasActual.get('totalReservas')})
+                            else 
+                                p(class="text-sm font-bold") No existe información
                         div(class="flex justify-between")
                             p(class="text-sm") Hab. preferida:
-                            p(class="text-sm font-bold") #{tipoHabitacionMasOcupadaActual.get('tipoHabitacion')} (#{tipoHabitacionMasOcupadaActual.get('totalReservas')} reservas) 
+                            if tipoHabitacionMasOcupadaActual
+                                p(class="text-sm font-bold") #{tipoHabitacionMasOcupadaActual.get('tipoHabitacion')} (#{tipoHabitacionMasOcupadaActual.get('totalReservas')} reservas) 
+                            else 
+                                p(class="text-sm font-bold") No existe información 
                         div(class="flex justify-between")
                             p(class="text-sm") Hab. menos preferida:
-                            p(class="text-sm font-bold") #{tipoHabitacionMenosOcupadaActual.get('tipoHabitacion')} (#{tipoHabitacionMenosOcupadaActual.get('totalReservas')} reservas)
+                            if tipoHabitacionMenosOcupadaActual
+                                p(class="text-sm font-bold") #{tipoHabitacionMenosOcupadaActual.get('tipoHabitacion')} (#{tipoHabitacionMenosOcupadaActual.get('totalReservas')} reservas)
+                            else 
+                                p(class="text-sm font-bold") No existe información
                     //- Tabla Mensajes
                     div(class="flex flex-col gap-3 border-2 p-3") 
                         h1(class="mx-auto text-center text-xl font-bold font-display text-sky-950") Mensajes
                         div(class="flex justify-between")
                             p(class="text-sm") Mensajes nuevos:
-                            p(class="text-sm font-bold")= mensajesNuevosActual
+                            if mensajesNuevosActual
+                                p(class="text-sm font-bold")= mensajesNuevosActual
+                            else 
+                                p(class="text-sm font-bold") No existe información
                         div(class="flex justify-between")
                             p(class="text-sm") Mensajes respondidos:
-                            p(class="text-sm font-bold")= mensajesRespondidosActual
+                            if mensajesRespondidosActual
+                                p(class="text-sm font-bold")= mensajesRespondidosActual
+                            else 
+                                p(class="text-sm font-bold") No existe información
                         div(class="flex justify-between")
                             p(class="text-sm") Mayor tipo de mensajes:
-                            p(class="text-sm font-bold first-letter:uppercase") #{mayorMotivoMensaje.get('motivo')} (#{mayorMotivoMensaje.get('totalMensajes')})
+                            if mayorMotivoMensaje
+                                p(class="text-sm font-bold first-letter:uppercase") #{mayorMotivoMensaje.get('motivo')} (#{mayorMotivoMensaje.get('totalMensajes')})
+                            else 
+                                p(class="text-sm font-bold first-letter:uppercase") No existe información
                         div(class="flex justify-between")
                             p(class="text-sm") Menor tipo de mensajes:
-                            p(class="text-sm font-bold first-letter:uppercase") #{menorMotivoMensaje.get('motivo')}
+                            if menorMotivoMensaje
+                                p(class="text-sm font-bold first-letter:uppercase") #{menorMotivoMensaje.get('motivo')}
+                            else 
+                                p(class="text-sm font-bold first-letter:uppercase") No existe información
 
                     //- Tabla Menús
                     div(class="flex flex-col gap-3 border-2 p-3") 
                         h1(class="mx-auto text-center text-xl font-bold font-display text-sky-950") Menús
                         div(class="flex justify-between")
                             p(class="text-sm") Plato favorito:
-                            p(class="text-sm font-bold") 
+                            if platoFavorito
+                                p(class="text-sm font-bold") #{platoFavorito[0].name}
+                            else
+                                p(class="text-sm font-bold") No existe información
                         div(class="flex justify-between")
                             p(class="text-sm") Plato menos favorito:
-                            p(class="text-sm font-bold") 
+                            if platoFavorito
+                                p(class="text-sm font-bold") #{platoMenosFavorito[0].name}
+                            else 
+                                p(class="text-sm font-bold") No existe información
                         div(class="flex justify-between")
                             p(class="text-sm") Dinero Generado:
-                            p(class="text-sm font-bold") 
+                            if dineroGenerado
+                                p(class="text-sm font-bold") $#{dineroGenerado.dineroGenerado}
+                            else 
+                                p(class="text-sm font-bold") No existe información
                     //- Tabla Financiamiento
                     div(class="col-start-1 col-end-3 flex flex-col gap-3 border-2 p-3") 
                         h1(class="mx-auto text-center text-xl font-bold font-display text-sky-950") Financiamiento
                         div(class="flex justify-between")
                             p(class="text-sm") Dinero obtenido en reservas:
-                            p(class="text-sm font-bold") 
-                        div(class="flex justify-between")
-                            p(class="text-sm") Dinero obtenido en pedidos:
-                            p(class="text-sm font-bold") 
+                            if dineroGeneradoReservas.totalDinero
+                                p(class="text-sm font-bold") $#{dineroGeneradoReservas.totalDinero}
+                            else 
+                                p(class="text-sm font-bold") No existe información
                         div(class="flex justify-between")
                             p(class="text-sm") Promedio de días por reserva:
-                            p(class="text-sm font-bold") 
+                            //- if promedioDiasReservas
+                            p(class="text-sm font-bold") #{promedioDiasReservas} 
+                            //- else 
+                            //-     p(class="text-sm font-bold") No existe información
                         div(class="flex justify-between")
                             p(class="text-sm") Promedio de dinero por reserva:
-                            p(class="text-sm font-bold") 
+                            if promedioDineroReserva.promedioDinero
+                                p(class="text-sm font-bold") $#{promedioDineroReserva.promedioDinero}
+                            else 
+                                p(class="text-sm font-bold") No existe información
                             
             div(class="flex flex-col gap-6")
                 h1(class="col-start-1 col-end-3 mx-auto text-3xl font-bold font-display text-sky-950 justify-center") Mes Anterior
@@ -90,69 +138,117 @@ block contenido
                         h1(class="mx-auto text-center text-xl font-bold font-display text-sky-950") Usuarios
                         div(class="flex justify-between")
                             p(class="text-sm") N° Usuarios Nuevos:
-                            p(class="text-sm font-bold") 1
+                            if usuarioMesAnterior
+                                p(class="text-sm font-bold")= usuarioMesAnterior 
+                            else 
+                                p(class="text-sm font-bold") No existe información
                         div(class="flex justify-between")
                             p(class="text-sm") Distribuición de Géneros:
-                            p(class="text-sm font-bold") 1
+                            if  hombresAnterior && usuarioMesAnterior
+                                p(class="text-sm font-bold") #{((hombresAnterior/usuarioMesAnterior)*100).toFixed(2)}% (M) / #{((mujeresAnterior/usuarioMesAnterior)*100).toFixed(2)}% (F)
+                            else 
+                                p(class="text-sm font-bold") No existe información
                         div(class="flex justify-between")
                             p(class="text-sm") Usuarios nuevos que reservaron (%):
-                            p(class="text-sm font-bold") 1
+                            if usuarioMesAnterior == 0
+                                p(class="text-sm text-right font-bold") No se registraron usuarios
+                            else
+                                p(class="text-sm font-bold") #{usuariosNuevosReservaAnterior / usuarioMesAnterior * 100}%
                     //- Tabla Reservas
                     div(class="flex flex-col gap-3 border-2 p-3") 
                         h1(class="mx-auto text-center text-xl font-bold font-display text-sky-950") Reservas
                         div(class="flex justify-between")
                             p(class="text-sm") Reservas generadas:
-                            p(class="text-sm font-bold") 2
+                            if reservasNuevasAnterior
+                                p(class="text-sm font-bold")= reservasNuevasAnterior
+                            else 
+                                p(class="text-sm font-bold") No existe información
                         div(class="flex justify-between")
                             p(class="text-sm") Día con más reservas:
-                            p(class="text-sm font-bold") 2
+                            if diaMasReservasAnterior
+                                p(class="text-sm font-bold") #{diaMasReservasAnterior.get('dia')} (Cant.:#{diaMasReservasAnterior.get('totalReservas')})
+                            else 
+                                p(class="text-sm font-bold") No existe información
                         div(class="flex justify-between")
                             p(class="text-sm") Tipo de habitación preferida:
-                            p(class="text-sm font-bold") 2
+                            if tipoHabitacionMasOcupadaAnterior
+                                p(class="text-sm font-bold") #{tipoHabitacionMasOcupadaAnterior.get('tipoHabitacion')} (#{tipoHabitacionMasOcupadaAnterior.get('totalReservas')} reservas) 
+                            else 
+                                p(class="text-sm font-bold") No existe información 
                         div(class="flex justify-between")
                             p(class="text-sm") Tipo de habitación menos preferida:
-                            p(class="text-sm font-bold") 2 
+                            if tipoHabitacionMenosOcupadaAnterior
+                                p(class="text-sm font-bold") #{tipoHabitacionMenosOcupadaAnterior.get('tipoHabitacion')} (#{tipoHabitacionMenosOcupadaAnterior.get('totalReservas')} reservas)
+                            else 
+                                p(class="text-sm font-bold") No existe información
                     //- Tabla Mensajes
                     div(class="flex flex-col gap-3 border-2 p-3") 
                         h1(class="mx-auto text-center text-xl font-bold font-display text-sky-950") Mensajes
                         div(class="flex justify-between")
                             p(class="text-sm") Mensajes nuevos:
-                            p(class="text-sm font-bold") 3
+                            if mensajesNuevoAnterior
+                                p(class="text-sm font-bold")= mensajesNuevoAnterior
+                            else 
+                                p(class="text-sm font-bold") No existe información
                         div(class="flex justify-between")
                             p(class="text-sm") Mensajes respondidos:
-                            p(class="text-sm font-bold") 3
+                            if mensajesRespondidosAnterior
+                                p(class="text-sm font-bold")= mensajesRespondidosAnterior
+                            else 
+                                p(class="text-sm font-bold") No existe información
                         div(class="flex justify-between")
                             p(class="text-sm") Mayor tipo de mensajes:
-                            p(class="text-sm font-bold") 3
+                            if mayorMotivoMensajeAnterior
+                                p(class="text-sm font-bold first-letter:uppercase") #{mayorMotivoMensajeAnterior.get('motivo')} (#{mayorMotivoMensajeAnterior.get('totalMensajes')})
+                            else 
+                                p(class="text-sm font-bold first-letter:uppercase") No existe información
                         div(class="flex justify-between")
                             p(class="text-sm") Menor tipo de mensajes:
-                            p(class="text-sm font-bold") 3
+                            if menorMotivoMensajeAnterior
+                                p(class="text-sm font-bold first-letter:uppercase") #{menorMotivoMensajeAnterior.get('motivo')}
+                            else 
+                                p(class="text-sm font-bold first-letter:uppercase") No existe información
                     //- Tabla Menús
                     div(class="flex flex-col gap-3 border-2 p-3") 
                         h1(class="mx-auto text-center text-xl font-bold font-display text-sky-950") Menús
                         div(class="flex justify-between")
                             p(class="text-sm") Plato favorito:
-                            p(class="text-sm font-bold") 4
+                            if platoFavAnterior
+                                p(class="text-sm font-bold") #{platoFavAnterior[0].name}
+                            else
+                                p(class="text-sm font-bold") No existe información
                         div(class="flex justify-between")
                             p(class="text-sm") Plato menos favorito:
-                            p(class="text-sm font-bold") 4
+                            if platoFavAnterior
+                                p(class="text-sm font-bold") #{platoMenosFavoritoAnterior[0].name}
+                            else 
+                                p(class="text-sm font-bold") No existe información
                         div(class="flex justify-between")
-                            p(class="text-sm") Promedio gastado en menus por reserva:
-                            p(class="text-sm font-bold") 4
+                            p(class="text-sm") Dinero Generado:
+                            if dineroGeneradoAnterior
+                                p(class="text-sm font-bold") $#{dineroGeneradoAnterior.dineroGenerado}
+                            else 
+                                p(class="text-sm font-bold") No existe información
                     //- Tabla Financiamiento
                     div(class="col-start-1 col-end-3 flex flex-col gap-3 border-2 p-3") 
                         h1(class="mx-auto text-center text-xl font-bold font-display text-sky-950") Financiamiento
                         div(class="flex justify-between")
                             p(class="text-sm") Dinero obtenido en reservas:
-                            p(class="text-sm font-bold") 5
-                        div(class="flex justify-between")
-                            p(class="text-sm") Dinero obtenido en pedidos:
-                            p(class="text-sm font-bold") 5
+                            if dineroGeneradoReservasAnterior.totalDinero
+                                p(class="text-sm font-bold") $#{dineroGeneradoReservasAnterior.totalDinero}
+                            else 
+                                p(class="text-sm font-bold") No existe información
                         div(class="flex justify-between")
                             p(class="text-sm") Promedio de días por reserva:
-                            p(class="text-sm font-bold") 5
+                            //- if promedioDiasReservas
+                            p(class="text-sm font-bold") #{promedioDiasReservasAnterior} 
+                            //- else 
+                            //-     p(class="text-sm font-bold") No existe información
                         div(class="flex justify-between")
                             p(class="text-sm") Promedio de dinero por reserva:
-                            p(class="text-sm font-bold") 5
+                            if promedioDineroReservaAnterior.promedioDinero
+                                p(class="text-sm font-bold") $#{promedioDineroReservaAnterior.promedioDinero}
+                            else 
+                                p(class="text-sm font-bold") No existe información
                 
     include ../layout/footer

@@ -1,5 +1,5 @@
 import express from 'express'
-import { registro, ingresarRegistro, confirmarUsuario, login, ingresarLogin, recuperar, ingresarRecuperar, cambiarPassword, validarCambioPassword } from '../controller/usuarioController.js'
+import { registro, ingresarRegistro, confirmarUsuario, login, ingresarLogin, recuperar, ingresarRecuperar, cambiarPassword, validarCambioPassword, logout } from '../controller/usuarioController.js'
 
 const router = express.Router()
 
@@ -16,5 +16,7 @@ router.post('/recuperar', ingresarRecuperar)
 
 router.get('/cambiarPassword/:token', cambiarPassword)
 router.post('/cambiarPassword', validarCambioPassword)
+
+router.get('/logout', logout)
 
 export default router

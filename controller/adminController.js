@@ -1,7 +1,7 @@
 import { validationResult, check } from 'express-validator'
 import bcrypt from 'bcrypt'
 import { Op, fn, col, literal } from 'sequelize'
-import { HabitacionModel, UsuarioModel, ReservaModel, TipoModel, CuentasModel, MenuModel, SubCategoriaModel, CategoriaModel, MensajeModel, RespuestaModel, PedidoModel } from '../db.js'
+import { HabitacionModel, UsuarioModel, ReservaModel, TipoModel, CuentasModel, MenuModel, SubCategoriaModel, CategoriaModel, MensajeModel, RespuestaModel, PedidoModel, DetalleCompraModel } from '../db.js'
 import { Solicitar } from './pedidoController.js'
 import fs from 'fs'
 
@@ -30,26 +30,38 @@ const administrar = async (req, res) => {
         const hora = esInicio ? '00:00:00' : '23:59:59';
         return `${año}-${mes}-${dia} ${hora}`;
     }
-
-
+    
+    
+    
+    
     // Primer día del mes actual con hora de inicio (00:00:00)
     const primerDiaMesActual = new Date(fechaActual.getFullYear(), fechaActual.getMonth(), 1);
     const primerDiaMesActualConHora = formatearFechaConHora(primerDiaMesActual, true);
-
+    
     // Último día del mes actual con hora de fin (23:59:59)
     const ultimoDiaMesActual = new Date(fechaActual.getFullYear(), fechaActual.getMonth() + 1, 0);
     const ultimoDiaMesActualConHora = formatearFechaConHora(ultimoDiaMesActual, false);
-
+    
     // Primer día del mes anterior con hora de inicio (00:00:00)
     const primerDiaMesAnterior = new Date(fechaActual.getFullYear(), fechaActual.getMonth() - 1, 1);
     const primerDiaMesAnteriorConHora = formatearFechaConHora(primerDiaMesAnterior, true);
-
+    
     // Último día del mes anterior con hora de fin (23:59:59)
     const ultimoDiaMesAnterior = new Date(fechaActual.getFullYear(), fechaActual.getMonth(), 0);
     const ultimoDiaMesAnteriorConHora = formatearFechaConHora(ultimoDiaMesAnterior, false);
+    
+    // mes pasado
+    
+
 
     // Estadísticas mes actual
-    const [ usuariosNuevosActual, hombresActual, mujeresActual, reservaUsuariosNuevosActual, reservasNuevasActual, diaConMasReservasActual, habitacionesMasYMenosPreferidas, mensajesNuevosActual, mensajesRespondidosActual, motivosMensajes  ] = await Promise.all([
+    const [ 
+        usuariosNuevosActual, hombresActual, mujeresActual, reservaUsuariosNuevosActual, 
+        reservasNuevasActual, diaConMasReservasActual, habitacionesMasYMenosPreferidas, 
+        mensajesNuevosActual, mensajesRespondidosActual, motivosMensajes,
+        platoFavorito, platoMenosFavorito, dineroGenerado,
+        dineroGeneradoReservas, promedioDias, promedioDineroReserva
+    ] = await Promise.all([
         // Estadísticas Usuarios DIV
         UsuarioModel.count({
             where: {
@@ -191,7 +203,7 @@ const administrar = async (req, res) => {
                 }
             }
         }),
-        MensajeModel.findAll({
+        MensajeModel.findAll({ 
             attributes: [ 'motivo', [fn('COUNT', col('id')), 'totalMensajes'] 
             ],
             where: {
@@ -204,12 +216,90 @@ const administrar = async (req, res) => {
             order: [[literal('totalMensajes'), 'DESC']]
         }),
         // Estadísticas Menús DIV
-
+        DetalleCompraModel.findAll({
+            attributes: [
+                'name',
+                [fn('SUM', col('cantidad')), 'totalCantidad'],
+            ],
+            where: {
+                createdAt: {
+                    [Op.gte]: primerDiaMesActualConHora,
+                    [Op.lte]: ultimoDiaMesActualConHora,
+                }
+            },
+            group: ['name'],
+            order: [[fn('SUM', col('cantidad')), 'DESC']],
+            limit: 1 
+        }),
+        DetalleCompraModel.findAll({
+            attributes: [
+                'name',
+                [fn('SUM', col('cantidad')), 'totalCantidad'],
+            ],
+            where: {
+                createdAt: {
+                    [Op.gte]: primerDiaMesActualConHora,
+                    [Op.lte]: ultimoDiaMesActualConHora,
+                }
+            },
+            group: ['name'],
+            order: [[fn('SUM', col('cantidad')), 'ASC']],
+            limit: 1 
+        }),
+        DetalleCompraModel.findOne({
+            attributes: [
+                [fn('SUM', col('subTotal')), 'dineroGenerado']
+            ],
+            where: {
+                createdAt: {
+                    [Op.gte]: primerDiaMesActualConHora,
+                    [Op.lte]: ultimoDiaMesActualConHora,
+                }
+            },
+            raw: true
+        }),
         // Estadísticas Financiamiento DIV
-
+        ReservaModel.findOne({
+            attributes: [
+                [fn('SUM', col('montoTotal')), 'totalDinero']
+            ],
+            where: {
+                createdAt: {
+                    [Op.gte]: primerDiaMesActualConHora,
+                    [Op.lte]: ultimoDiaMesActualConHora,
+                }
+            },
+            raw: true
+        }),
+        ReservaModel.findOne({
+            attributes: [
+                [fn('AVG', literal('DATEDIFF(fechaFin, fechaInicio)')), 'promedioDias']
+            ],
+            where: {
+                createdAt: {
+                    [Op.gte]: primerDiaMesActualConHora,
+                    [Op.lte]: ultimoDiaMesActualConHora,
+                }
+            },
+            raw: true
+        }),
+        ReservaModel.findOne({
+            attributes: [
+                [fn('AVG', col('montoTotal')), 'promedioDinero']
+            ],
+            where: {
+                createdAt: {
+                    [Op.gte]: primerDiaMesActualConHora,
+                    [Op.lte]: ultimoDiaMesActualConHora
+                }
+            },
+            raw: true
+        })
     ])
-    console.log(motivosMensajes)
-    
+
+    // Obtener el promedio de dias de las reservas del mes actual
+    const promedioDiasReservas = Math.round(promedioDias.promedioDias || 0);
+
     // Obtener el mayor y menor cantidad del tipo de Habitación 
     const tipoHabitacionMasOcupadaActual = habitacionesMasYMenosPreferidas[0]
     const tipoHabitacionMenosOcupadaActual = habitacionesMasYMenosPreferidas[habitacionesMasYMenosPreferidas.length - 1]
@@ -218,11 +308,266 @@ const administrar = async (req, res) => {
     const mayorMotivoMensaje = motivosMensajes[0]
     const menorMotivoMensaje = motivosMensajes[motivosMensajes.length - 1]
 
+
+    const [
+        usuarioMesAnterior, hombresAnterior, mujeresAnterior, usuariosNuevosReservaAnterior,
+        reservasNuevasAnterior, diaMasReservasAnterior, habitacionMasMenosPreferidas,
+        mensajesNuevoAnterior, mensajesRespondidosAnterior, motivosMensajesAnterior,
+        platoFavAnterior, platoMenosFavoritoAnterior, dineroGeneradoAnterior,
+        dineroGeneradoReservasAnterior, promedioDiasAnterior, promedioDineroReservaAnterior
+    ] = await Promise.all([
+        // Estadísticas Usuarios DIV
+        UsuarioModel.count({
+            where: {
+                cuentaId: 1,
+                [Op.and]: {
+                    createdAt: {
+                        [Op.gte]: primerDiaMesAnteriorConHora,
+                        [Op.lte]: ultimoDiaMesAnteriorConHora
+                    }
+                }
+            }
+        }),
+        UsuarioModel.count({
+            where: {
+                cuentaId: 1,
+                [Op.and]: {
+                    createdAt: {
+                        [Op.gte]: primerDiaMesAnteriorConHora,
+                        [Op.lte]: ultimoDiaMesAnteriorConHora
+                    }
+                },
+                genero: 'masculino'
+            }
+        }),
+        UsuarioModel.count({
+            where: {
+                cuentaId: 1,
+                [Op.and]: {
+                    createdAt: {
+                        [Op.gte]: primerDiaMesAnteriorConHora,
+                        [Op.lte]: ultimoDiaMesAnteriorConHora
+                    }
+                },
+                genero: 'femenino'
+            }
+        }),
+        ReservaModel.count({
+            include: [
+                { model: UsuarioModel,
+                    where: {
+                        cuentaId: 1,
+                        [Op.and]: {
+                            createdAt: {
+                                [Op.gte]: primerDiaMesAnteriorConHora,
+                                [Op.lte]: ultimoDiaMesAnteriorConHora
+                            }
+                        }
+                    }
+                }
+            ],
+        }),
+        // Estadísticas Reservas DIV
+        ReservaModel.count({
+            where: {
+                [Op.and]: {
+                    createdAt: {
+                        [Op.gte]: primerDiaMesAnteriorConHora,
+                        [Op.lte]: ultimoDiaMesAnteriorConHora
+                    }
+                }
+            }
+        }),
+        ReservaModel.findOne({
+            attributes: [
+                [fn('DATE', col('createdAt')), 'dia'],  
+                [fn('COUNT', col('id')), 'totalReservas']
+            ],
+            where: {
+                createdAt: {
+                    [Op.gte]: primerDiaMesAnteriorConHora,
+                    [Op.lte]: ultimoDiaMesAnteriorConHora
+                }
+            },
+            group: [fn('DATE', col('createdAt'))], 
+            order: [[literal('totalReservas'), 'DESC']], 
+            limit: 1
+        }),
+        ReservaModel.findAll({
+            attributes: [
+                [fn('COUNT', col('reserva.id')), 'totalReservas'],
+                'habitacion.id',
+                'habitacion.name',
+                'habitacion.dormitorios',
+                'habitacion.estado',
+                'habitacion.habilitado',
+                'habitacion.tipoId',
+                [col('habitacion->tipo.name'), 'tipoHabitacion']
+            ],
+            where: {
+                createdAt: {
+                    [Op.gte]: primerDiaMesAnteriorConHora,
+                    [Op.lte]: ultimoDiaMesAnteriorConHora
+                }
+            },
+            include: [
+                {
+                    model: HabitacionModel,
+                    as: 'habitacion',
+                    include: [
+                        {
+                            model: TipoModel,
+                            attributes: ['name'],
+                            as: 'tipo'
+                        }
+                    ]
+                }
+            ],
+            group: [
+                'habitacion.id',
+                'habitacion.name',
+                'habitacion.dormitorios',
+                'habitacion.estado',
+                'habitacion.habilitado',
+                'habitacion.tipoId',
+                'habitacion->tipo.id',
+                'habitacion->tipo.name'
+            ],
+            order: [[literal('totalReservas'), 'DESC']]
+        }),
+         // Estadísticas Mensajes DIV
+         MensajeModel.count({
+            where: {
+                [Op.and]: {
+                    createdAt: {
+                        [Op.gte]: primerDiaMesAnteriorConHora,
+                        [Op.lte]: ultimoDiaMesAnteriorConHora
+                    }
+                }
+            }
+        }),
+        MensajeModel.count({
+            where: {
+                estado: 1,
+                [Op.and]: {
+                    createdAt: {
+                        [Op.gte]: primerDiaMesAnteriorConHora,
+                        [Op.lte]: ultimoDiaMesAnteriorConHora
+                    }
+                }
+            }
+        }),
+        MensajeModel.findAll({ 
+            attributes: [ 'motivo', [fn('COUNT', col('id')), 'totalMensajes'] 
+            ],
+            where: {
+                createdAt: {
+                    [Op.gte]: primerDiaMesAnteriorConHora,
+                    [Op.lte]: ultimoDiaMesAnteriorConHora
+                }
+            },
+            group: ['motivo'],
+            order: [[literal('totalMensajes'), 'DESC']]
+        }),
+        // Estadísticas Menús DIV
+        DetalleCompraModel.findAll({
+            attributes: [
+                'name',
+                [fn('SUM', col('cantidad')), 'totalCantidad'],
+            ],
+            where: {
+                createdAt: {
+                    [Op.gte]: primerDiaMesAnteriorConHora,
+                    [Op.lte]: ultimoDiaMesAnteriorConHora
+                }
+            },
+            group: ['name'],
+            order: [[fn('SUM', col('cantidad')), 'DESC']],
+            limit: 1 
+        }),
+        DetalleCompraModel.findAll({
+            attributes: [
+                'name',
+                [fn('SUM', col('cantidad')), 'totalCantidad'],
+            ],
+            where: {
+                createdAt: {
+                    [Op.gte]: primerDiaMesAnteriorConHora,
+                    [Op.lte]: ultimoDiaMesAnteriorConHora
+                }
+            },
+            group: ['name'],
+            order: [[fn('SUM', col('cantidad')), 'ASC']],
+            limit: 1 
+        }),
+        DetalleCompraModel.findOne({
+            attributes: [
+                [fn('SUM', col('subTotal')), 'dineroGenerado']
+            ],
+            where: {
+                createdAt: {
+                    [Op.gte]: primerDiaMesAnteriorConHora,
+                    [Op.lte]: ultimoDiaMesAnteriorConHora
+                }
+            },
+            raw: true
+        }),
+        // Estadísticas Financiamiento DIV
+        ReservaModel.findOne({
+            attributes: [
+                [fn('SUM', col('montoTotal')), 'totalDinero']
+            ],
+            where: {
+                createdAt: {
+                    [Op.gte]: primerDiaMesAnteriorConHora,
+                    [Op.lte]: ultimoDiaMesAnteriorConHora
+                }
+            },
+            raw: true
+        }),
+        ReservaModel.findOne({
+            attributes: [
+                [fn('AVG', literal('DATEDIFF(fechaFin, fechaInicio)')), 'promedioDias']
+            ],
+            where: {
+                createdAt: {
+                    [Op.gte]: primerDiaMesAnteriorConHora,
+                    [Op.lte]: ultimoDiaMesAnteriorConHora
+                }
+            },
+            raw: true
+        }),
+        ReservaModel.findOne({
+            attributes: [
+                [fn('AVG', col('montoTotal')), 'promedioDinero']
+            ],
+            where: {
+                createdAt: {
+                    [Op.gte]: primerDiaMesAnteriorConHora,
+                    [Op.lte]: ultimoDiaMesAnteriorConHora
+                }
+            },
+            raw: true
+        })
+    ])
+    // Obtener el promedio de dias de las reservas del mes actual
+    const promedioDiasReservasAnterior = Math.round(promedioDiasAnterior.promedioDiasAnterior || 0);
+
+    // Obtener el mayor y menor cantidad del tipo de Habitación 
+    const tipoHabitacionMasOcupadaAnterior = habitacionMasMenosPreferidas[0]
+    const tipoHabitacionMenosOcupadaAnterior = habitacionMasMenosPreferidas[habitacionMasMenosPreferidas.length - 1]
+    
+    // Obtener el mayor y menor cantidad del Motivo de los mensajes 
+    const mayorMotivoMensajeAnterior = motivosMensajesAnterior[0]
+    const menorMotivoMensajeAnterior = motivosMensajesAnterior[motivosMensajesAnterior.length - 1]
+
     res.render('admin/administrar',{
         pagina: 'Administración',
         autenticado: true,
         usuarioSolicitar,
         cuentaId,
+
+        // MES ACTUAL
         // Estadísticas Usuarios DIV
         usuariosNuevosActual,
         hombresActual,
@@ -239,8 +584,39 @@ const administrar = async (req, res) => {
         mayorMotivoMensaje,
         menorMotivoMensaje,
         // Estadísticas Menús DIV
-
+        platoFavorito,
+        platoMenosFavorito,
+        dineroGenerado,
         // Estadísticas Financiamiento DIV
+        dineroGeneradoReservas,
+        promedioDiasReservas,
+        promedioDineroReserva,
+
+
+        // Consultas mes anterior
+        // Estadísticas Usuarios DIV
+        usuarioMesAnterior,
+        hombresAnterior,
+        mujeresAnterior,
+        usuariosNuevosReservaAnterior,
+        // Estadísticas Reservas DIV
+        reservasNuevasAnterior, 
+        diaMasReservasAnterior,
+        tipoHabitacionMasOcupadaAnterior,
+        tipoHabitacionMenosOcupadaAnterior,
+        // Estadísticas Mensajes DIV
+        mensajesNuevoAnterior, 
+        mensajesRespondidosAnterior,
+        mayorMotivoMensajeAnterior,
+        menorMotivoMensajeAnterior,
+        // Estadísticas Menús DIV
+        platoFavAnterior, 
+        platoMenosFavoritoAnterior,
+        dineroGeneradoAnterior,
+        // Estadísticas Financiamiento DIV
+        dineroGeneradoReservasAnterior,
+        promedioDiasReservasAnterior,
+        promedioDineroReservaAnterior
 
     })
 }
