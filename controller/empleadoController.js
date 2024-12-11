@@ -1,4 +1,4 @@
-import { Op } from 'sequelize'
+import { col, fn, Op } from 'sequelize'
 import { HabitacionModel, UsuarioModel, ReservaModel, TipoModel, CompraModel, DetalleCompraModel, TipoEventoModel, ExperienciaModel, EventoModel } from '../db.js'
 import { Solicitar } from './pedidoController.js'
 
@@ -361,12 +361,14 @@ const servicio = async (req,res) => {
                         { model: TipoModel }
                     ]
                 }
-            ],
-            distinct: true
+            ]
         }),
 
         // Eventos que necesitan prepararse antes de que llegue el Cliente
         ReservaModel.findAll({
+            where: {
+                recepcionado: 0
+            },
             include: [
                 { model: HabitacionModel, as: 'habitacion'},
                 { model: UsuarioModel },

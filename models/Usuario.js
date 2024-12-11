@@ -32,6 +32,9 @@ const Usuario = db.define('usuarios', {
         type: DataTypes.STRING,
         allowNull: false
     },
+    fechaCreacion: {
+        type: DataTypes.STRING,
+    },
     password: {
         type: DataTypes.STRING,
         allowNull: false

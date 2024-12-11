@@ -29,7 +29,7 @@ const emailConfirmacion = async (datos) => {
               <p style="margin:0;">Hola ${name}.</p>
               <p style="margin:0;">Has creado una cuenta en hoteleria.com</p>
               <p style="margin:0;">Sigue el siguiente enlace para confirmar su cuenta:
-              <a href="${process.env.URL}/auth/mensaje/${token}">Confirmar mi cuenta</a></p>
+              <a href="http://${process.env.URL}/auth/mensaje/${token}">Confirmar mi cuenta</a></p>
               <p style="margin:0;">Si tu no has creado una cuenta, puedes ignorar el mensaje</p>
             </div>
             <div style="border-top: 1px black solid;padding-top: 5px; margin-left:5px;">

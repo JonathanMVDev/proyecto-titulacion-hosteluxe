@@ -12,11 +12,10 @@ async function reserva() {
     const mes = (fecha.getMonth() + 1).toString().padStart(2, '0')
     const año = fecha.getFullYear()
     const fechaActual = `${año}-${mes}-${dia}`
-    console.log(fechaActual)
 
     // Fecha de Dos Días Más
     const fecha_2 = new Date()
-    fecha_2.setDate(fecha_2.getDate() + 20)
+    fecha_2.setDate(fecha_2.getDate() + 2)
     const dia_2 = (fecha_2.getDate() +2).toString().padStart(2, '0')
     const mes_2 = (fecha_2.getMonth() + 1).toString().padStart(2, '0')
     const año_2 = fecha_2.getFullYear()
@@ -27,9 +26,9 @@ async function reserva() {
             fechaInicio: '2024-09-01',
             fechaFin: '2024-09-01',
             cantidadDias: (differenceInDays('2024-09-01', '2024-09-01')+1),
-            montoTotal: 123123,
+            montoTotal: 40000,
             fechaCreacion: '01-09-2024 06:50:46',
-            habitacionId: 1,
+            habitacionId: 2,
             usuarioId: id,
             recepcionado: 2,
             eventoId: 1
@@ -38,9 +37,9 @@ async function reserva() {
             fechaInicio: '2024-09-02',
             fechaFin: '2024-09-02',
             cantidadDias: (differenceInDays('2024-09-02', '2024-09-02')+1),
-            montoTotal: 123123,
+            montoTotal: 40000,
             fechaCreacion: '02-09-2024 06:50:46',
-            habitacionId: 1,
+            habitacionId: 11,
             usuarioId: id,
             recepcionado: 2,
             eventoId: 2
@@ -49,28 +48,27 @@ async function reserva() {
             fechaInicio: '2024-09-03',
             fechaFin: '2024-09-03',
             cantidadDias: (differenceInDays('2024-09-03', '2024-09-03')+1),
-            montoTotal: 123123,
+            montoTotal: 40000,
             fechaCreacion: '03-09-2024 06:50:46',
-            habitacionId: 1,
+            habitacionId: 12,
             usuarioId: id,
             recepcionado: 2,
             eventoId: 3
         },
-        {
-            fechaInicio: fechaActual,
-            fechaFin: fechaDosDias,
-            cantidadDias: (differenceInDays(fechaDosDias, fechaActual)+1),
-            montoTotal: 123123,
-            fechaCreacion: '05-09-2024 16:50:46',
-            habitacionId: 1,
-            usuarioId: id,
-            recepcionado: 1,
-            eventoId: 4
-        }
+        // {
+        //     fechaInicio: fechaActual,
+        //     fechaFin: fechaDosDias,
+        //     cantidadDias: (differenceInDays(fechaDosDias, fechaActual)+1),
+        //     montoTotal: 123123,
+        //     fechaCreacion: '05-09-2024 16:50:46',
+        //     habitacionId: 1,
+        //     usuarioId: id,
+        //     recepcionado: 1,
+        //     eventoId: 4
+        // }
     ]
     return reservas
 }
-
 
 export default reserva
 

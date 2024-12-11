@@ -3,12 +3,12 @@ import bcrypt from 'bcrypt'
 const usuarios = [
     // Admins de la plataforma
     {
-        name: 'Jonathan',
+        name: 'Jonathan Muñoz',
         paterno: '',
-        materno: '',
+        materno: 'Villarroel',
         genero: 'masculino',
         email: 'jona@correo.com',
-        telefono: '123123',
+        telefono: '68391241',
         password: bcrypt.hashSync('password', 10),
         cuentaId: 5,
         fechaCreacion: '05-09-2024 12:50:46',
@@ -28,20 +28,6 @@ const usuarios = [
         token: '',
         confirmado: 1
     },
-    {
-        name: 'Renato',
-        paterno: '',
-        materno: '',
-        genero: 'masculino',
-        email: 'renato@correo.com',
-        telefono: '123123',
-        password: bcrypt.hashSync('password', 10),
-        cuentaId: 5,
-        fechaCreacion: '05-09-2024 16:50:46',
-        token: '',
-        confirmado: 1
-    },
-
 
     // Usuarios Normales
     {
